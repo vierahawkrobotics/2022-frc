@@ -7,9 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.InvertType;
 
 
 /**
@@ -19,10 +18,10 @@ import edu.wpi.first.wpilibj.motorcontrol.Talon;
 public class Robot extends TimedRobot {
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(leftDriveMotor1, rightDriveMotor1);
   private final Joystick joystick = new Joystick(0);
-  public static Talon leftDriveMotor1 = new Talon(0);
-  public static Talon leftFollower = new Talon(1);
-  public static Talon rightDriveMotor1 = new Talon(2);
-  public static Talon rightFollower = new Talon(3);
+  public static WPI_TalonSRX leftDriveMotor1 = new WPI_TalonSRX(1);
+  public static WPI_TalonSRX leftFollower = new WPI_TalonSRX(3);
+  public static WPI_TalonSRX rightDriveMotor1 = new WPI_TalonSRX(2);
+  public static WPI_TalonSRX rightFollower = new WPI_TalonSRX(4);
   
   @Override
   public void robotInit() {
@@ -32,7 +31,8 @@ public class Robot extends TimedRobot {
 
     rightDriveMotor1.setInverted(true);
     leftDriveMotor1.setInverted(false);
-    rightFollower.setInverted(true);
+
+    rightFollower.setInverted(InvertType.FollowMaster);
     leftFollower.setInverted(false);
 
 
@@ -43,6 +43,6 @@ public class Robot extends TimedRobot {
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
-    m_robotDrive.arcadeDrive(-joystick.getY(), joystick.getX());
+    m_robotDrive.arcadeDrive(-joystick.getY(), joystick.getZ());
   }
 }
