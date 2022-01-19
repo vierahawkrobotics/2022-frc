@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
   private static final double driveP = 0.03;
   private static final double driveI = 0.00;
   private static final double driveD = 0.00;
-  private static final double driveToleranceDegrees = 1.0f;
+  private static final double driveToleranceDegrees = 0.5f;
   
 
   PIDController turnController;
@@ -77,7 +77,13 @@ public class Robot extends TimedRobot {
     double rotateToAngleRate = turnController.calculate(ahrs.getYaw(), 0.0);
     double forward = 1.0 * joystick.getY(); // Sign this so forward is positive
     double turn = -0.5 * joystick.getZ();
-    m_robotDrive.arcadeDrive(forward, turn + rotateToAngleRate);
+
+    if (turn < 0 || turn > 0){
+      m_robotDrive.arcadeDrive(forward, turn);
+    }
+    else{
+      m_robotDrive.arcadeDrive(forward, turn + rotateToAngleRate);
+    }
   
   
   }
