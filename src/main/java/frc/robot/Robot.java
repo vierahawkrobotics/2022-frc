@@ -18,8 +18,10 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 public class Robot extends TimedRobot {
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(leftDriveMotor1, rightDriveMotor1);
   private final Joystick joystick = new Joystick(0);
+
   public static WPI_TalonSRX leftDriveMotor1 = new WPI_TalonSRX(1);
   public static WPI_TalonSRX leftFollower = new WPI_TalonSRX(3);
+
   public static WPI_TalonSRX rightDriveMotor1 = new WPI_TalonSRX(2);
   public static WPI_TalonSRX rightFollower = new WPI_TalonSRX(4);
   
@@ -34,8 +36,6 @@ public class Robot extends TimedRobot {
 
     rightFollower.setInverted(InvertType.FollowMaster);
     leftFollower.setInverted(false);
-
-
   }
 
   @Override
@@ -45,4 +45,4 @@ public class Robot extends TimedRobot {
     // and backward, and the X turns left and right.
     m_robotDrive.arcadeDrive(-joystick.getY(), joystick.getZ());
   }
-}
+} 
