@@ -8,6 +8,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import frc.robot.Lemonlight;
+
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -33,5 +35,6 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     m_robotDrive.arcadeDrive(-m_stick.getY(), m_stick.getX());
+    Lemonlight.lemonLightPeriodic();
   }
 }
