@@ -36,6 +36,7 @@ public class Robot extends TimedRobot {
   private static final double driveToleranceDegrees = 0.5f;
 
   private static double driveSetPoint = 0.0;
+  
 
   
   
@@ -70,6 +71,8 @@ public class Robot extends TimedRobot {
   ahrs.zeroYaw();
   turnController.setSetpoint(ahrs.getYaw());
 
+  driveSetPoint = 0;
+
 }
 
   @Override
@@ -79,19 +82,27 @@ public class Robot extends TimedRobot {
     // and backward, and the X turns left and right.
 
 
-
+    double driveZ = joystick.getZ();
 
     double rotateToAngleRate = turnController.calculate(ahrs.getYaw(), driveSetPoint);
     double forward = 1.0 * joystick.getY(); // Sign this so forward is positive
-    double turn = -0.5 * joystick.getZ();
+
+    // double turn = -0.5 * joystick.getZ();
 
     System.out.println("Z: " + joystick.getZ());
     System.out.println("Setpoint: " + driveSetPoint);
-
     
+    if (driveZ < -0.2){
+      driveSetPoint-=Math.sqrt(-driveZ)*0.4; //this is 20 degrees per second
+    }
+    else{}
+    
+    if (driveZ >0.2){
+      driveSetPoint+=Math.sqrt(driveZ)*0.4; //this is 20 degrees per second
+    }
+    else{}
     
    
-    driveSetPoint+=joystick.getZ()*0.4; //this is 20 degrees per second
     m_robotDrive.arcadeDrive(forward, rotateToAngleRate);
 
   
