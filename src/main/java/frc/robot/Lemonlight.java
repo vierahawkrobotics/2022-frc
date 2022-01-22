@@ -19,10 +19,21 @@ public class Lemonlight {
     private String m_tableName;
     
     //read values periodically
-    public static float getVertOffset(){
-        NetworkTableEntry ta = m_table.getEntry("ty");
+    public static double getVertOffset(){
+        NetworkTableEntry ty = m_table.getEntry("ty");
         double a = ty.getDouble(0.0);
-        return (float) a;
+        return a;
+    }
+    public static double getHorizontalOffset(){
+        NetworkTableEntry ty = m_table.getEntry("tx");
+        double b = tx.getDouble(0.0);
+        return b;
+    }
+
+    public static double getArea(){
+        NetworkTableEntry ta = m_table.getEntry("ta");
+        double c = ta.getDouble(0.0);
+        return c;
     }
     public static double distanceGrab(){
         //measurements in inches, sorry ik you need centimeters
@@ -33,6 +44,7 @@ public class Lemonlight {
         double targetAngle = Lemonlight.getVertOffset();
         //how tall camera is too floor
         double mountedHeight = 24;
+        //heght of target off floor
         double targetHeight = 26;
 
         distance = (mountedHeight-targetHeight)/(Math.tan(mountingAngle+targetAngle));

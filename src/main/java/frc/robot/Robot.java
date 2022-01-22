@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     m_robotDrive.arcadeDrive(-m_stick.getY(), m_stick.getX());
-    System.out.print(Lemonlight.distanceGrab());
-    //System.out.println("Helo");
+    System.out.println("Distance to tape: " +Lemonlight.distanceGrab());
+    System.out.println("Helo");
   }
 }
