@@ -6,7 +6,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
 import static java.lang.Math.*;
-import frc.robot.LemonTest;
+//import frc.robot.LemonTest;
 import frc.robot.ControlPanel;
 
 public class Lemonlight {
@@ -16,16 +16,25 @@ public class Lemonlight {
     static NetworkTableEntry ty = table.getEntry("ty");
     static NetworkTableEntry ta = table.getEntry("ta");
     private static NetworkTable m_table;
-    private String m_tableName;
-    
-    //read values periodically
+   private String m_tableName = "limelight";
+
+   public void LemonTest() {
+        //m_tableName = "limelight";
+        m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
+        //hearBeat.startPeriodic(_hearBeatPeriod);
+    }
+    /**
+     * read values periodically
+     * @return
+     */
     public static double getVertOffset(){
+        //System.out.println("hello");
         NetworkTableEntry ty = m_table.getEntry("ty");
         double a = ty.getDouble(0.0);
         return a;
     }
     public static double getHorizontalOffset(){
-        NetworkTableEntry ty = m_table.getEntry("tx");
+        NetworkTableEntry tx = m_table.getEntry("tx");
         double b = tx.getDouble(0.0);
         return b;
     }
@@ -35,27 +44,27 @@ public class Lemonlight {
         double c = ta.getDouble(0.0);
         return c;
     }
-    public static double distanceGrab(){
+    public double distanceGrab(){
         //measurements in inches, sorry ik you need centimeters
         double distance = 0;
         //a1 - Angle that the camera is mounted
-        double mountingAngle = 180;
+        double mountingAngle = -10;
         //a2 - retrieve from camera
         double targetAngle = Lemonlight.getVertOffset();
         //how tall camera is too floor
-        double mountedHeight = 24;
+        double mountedHeight = 36;
         //heght of target off floor
-        double targetHeight = 26;
+        double targetHeight = 23;
 
-        distance = (mountedHeight-targetHeight)/(Math.tan(mountingAngle+targetAngle));
-
+        distance = (targetHeight-mountedHeight)/((Math.tan((mountingAngle+targetAngle) / 180 * 3.141592653589)));
+        //distance = (targetHeight-mountedHeight)/((Math.tan(mountingAngle+targetAngle)));
         return distance;
     }
     public static void lemonLightPeriodic(){
         double x = tx.getDouble(0.0);
         double y = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
-        double initialVelocity = 0;
+        //double initialVelocity = 0;
     //post to smart dashboard periodically
         SmartDashboard.putNumber("LimelightX", x);
         SmartDashboard.putNumber("LimelightY", y);

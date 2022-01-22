@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   private final Joystick m_stick = new Joystick(0);
   private final Lemonlight JoshsLemon = new Lemonlight();
   //private final Advanced_Target raw = new Advanced_Target;
-  private final ControlPanel panelOfControl = new ControlPanel();
+  //private final ControlPanel panelOfControl = new ControlPanel();
 
   @Override
   public void robotInit() {
@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotor.setInverted(true);
+    JoshsLemon.LemonTest();
   }
 
   @Override
@@ -39,7 +40,8 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     m_robotDrive.arcadeDrive(-m_stick.getY(), m_stick.getX());
-    System.out.println("Distance to tape: " +Lemonlight.distanceGrab());
-    System.out.println("Helo");
+    System.out.println("Distance to tape: " +JoshsLemon.distanceGrab());
+    System.out.println("Vert offset to tape: " +JoshsLemon.getVertOffset());
+    //System.out.println("Helo");
   }
 }
