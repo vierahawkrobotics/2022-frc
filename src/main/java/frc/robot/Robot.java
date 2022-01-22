@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import frc.robot.Lemonlight;
+import frc.robot.ControlPanel.Advanced_Target;
 
 
 /**
@@ -20,6 +21,9 @@ public class Robot extends TimedRobot {
   private final PWMSparkMax m_rightMotor = new PWMSparkMax(1);
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
   private final Joystick m_stick = new Joystick(0);
+  private final Lemonlight JoshsLemon = new Lemonlight();
+  //private final Advanced_Target raw = new Advanced_Target;
+  private final ControlPanel panelOfControl = new ControlPanel();
 
   @Override
   public void robotInit() {
@@ -35,8 +39,7 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     m_robotDrive.arcadeDrive(-m_stick.getY(), m_stick.getX());
-    //System.out.print(Lemonlight.lemonLightPeriodic());
-    //Lemonlight.lemonLightPeriodic();
-     //LemonTest.distanceGrab(raw);
+    System.out.print(Lemonlight.distanceGrab());
+    //System.out.println("Helo");
   }
 }

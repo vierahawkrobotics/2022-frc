@@ -326,20 +326,8 @@ public class LemonTest {
         return y;
     }
 
-    public double distanceGrab(Advanced_Crosshair raw){
-        //measurements in inches, sorry ik you need centimeters
-        double distance = 0;
-        //a1 - Angle that the camera is mounted
-        double mountingAngle = 180;
-        //a2 - retrieve from camera
-        double targetAngle = getAdvanced_RawCrosshair_Y(raw) ;
-        //how tall camera is too floor
-        double mountedHeight = 24;
-        double targetHeight = 26;
+    
 
-        distance = (mountedHeight-targetHeight)/(Math.tan(mountingAngle+targetAngle));
-
-        return distance;
-    }
+   
 
 }
