@@ -23,8 +23,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    // driveTrain.DriveTrainTeleop();
-    driveTrain.goToAngle(25);
+    driveTrain.DriveTrainTeleop();
+    // driveTrain.goToAngle(25);
   
   }
 } 
