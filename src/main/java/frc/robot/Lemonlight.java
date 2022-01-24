@@ -16,13 +16,25 @@ public class Lemonlight {
     static NetworkTableEntry ty = table.getEntry("ty");
     static NetworkTableEntry ta = table.getEntry("ta");
     private static NetworkTable m_table;
-   private String m_tableName = "limelight";
+    private String m_tableName = "limelight";
 
+    public static void lemonLightPeriodic(){
+        double x = tx.getDouble(0.0);
+        double y = ty.getDouble(0.0);
+        double area = ta.getDouble(0.0);
+        //double initialVelocity = 0;
+    //post to smart dashboard periodically
+        SmartDashboard.putNumber("LimelightX", x);
+        SmartDashboard.putNumber("LimelightY", y);
+        SmartDashboard.putNumber("LimelightArea", area);
+    
+    }
    public void LemonTest() {
         //m_tableName = "limelight";
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
         //hearBeat.startPeriodic(_hearBeatPeriod);
     }
+
     /**
      * read values periodically
      * @return
@@ -44,11 +56,15 @@ public class Lemonlight {
         double c = ta.getDouble(0.0);
         return c;
     }
+    public static double getMountingAngle(){
+        double mountingAngle = -10;
+        return mountingAngle;
+    }
     public double distanceGrab(){
         //measurements in inches, sorry ik you need centimeters
         double distance = 0;
         //a1 - Angle that the camera is mounted
-        double mountingAngle = -10;
+        double mountingAngle = getMountingAngle();
         //a2 - retrieve from camera
         double targetAngle = Lemonlight.getVertOffset();
         //how tall camera is too floor
@@ -60,35 +76,15 @@ public class Lemonlight {
         //distance = (targetHeight-mountedHeight)/((Math.tan(mountingAngle+targetAngle)));
         return distance;
     }
-    public static void lemonLightPeriodic(){
-        double x = tx.getDouble(0.0);
-        double y = ty.getDouble(0.0);
-        double area = ta.getDouble(0.0);
-        //double initialVelocity = 0;
-    //post to smart dashboard periodically
-        SmartDashboard.putNumber("LimelightX", x);
-        SmartDashboard.putNumber("LimelightY", y);
-        SmartDashboard.putNumber("LimelightArea", area);
-    
+   
+    public static double proportionalControlConstant(){
+        double kp = -0.1;
+        return kp;
     }
-    
-    // public static double distanceGrab(){
-    //     //measurements in inches, sorry ik you need centimeters
-    //     double distance = 0;
-    //     //a1 - Angle that the camera is mounted
-    //     double mountingAngle = 180;
-    //     //a2 - retrieve from camera
-    //     double targetAngle = 0;
-    //     //how tall camera is too floor
-    //     double mountedHeight = 24;
-    //     double targetHeight = 26;
-
-    //     distance = (mountedHeight-targetHeight)/(Math.tan(mountingAngle+targetAngle));
-
-    //     return distance;
-    // }
-
-    public static void initialVelocity(){
-
+    public static double validTarget(){
+        NetworkTableEntry tv = m_table.getEntry("tv");
+        double b = tv.getDouble(0.0);
+        return b;
     }
+
 }
