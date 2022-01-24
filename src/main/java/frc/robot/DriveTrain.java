@@ -106,8 +106,8 @@ public class DriveTrain {
             double driveZ = joystick.getZ();
         
             double rotateToAngleRate = turnController.calculate(ahrs.getYaw(), driveSetPoint);
-            double forward = Math.pow(100, joystick.getY() - 1) - 0.01; // Sign this so forward is positive
-            // double forward = joystick.getY(); // Sign this so forward is positive
+            // double forward = Math.pow(100, joystick.getY() - 1) - 0.01; // Sign this so forward is positive
+            double forward = joystick.getY(); // Sign this so forward is positive
         
             // double turn = -0.5 * joystick.getZ();
         
