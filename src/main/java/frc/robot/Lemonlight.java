@@ -7,7 +7,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Notifier;
 import static java.lang.Math.*;
 //import frc.robot.LemonTest;
-import frc.robot.ControlPanel;
+//import frc.robot.ControlPanel;
 
 public class Lemonlight {
 
@@ -23,7 +23,7 @@ public class Lemonlight {
         double y = ty.getDouble(0.0);
         double area = ta.getDouble(0.0);
         //double initialVelocity = 0;
-    //post to smart dashboard periodically
+        //post to smart dashboard periodically
         SmartDashboard.putNumber("LimelightX", x);
         SmartDashboard.putNumber("LimelightY", y);
         SmartDashboard.putNumber("LimelightArea", area);
@@ -87,4 +87,32 @@ public class Lemonlight {
         return b;
     }
 
+    public double getMountedHeight(){
+        double mountHeight = 36;
+        return mountHeight;
+    }
+
+    public double getTargetHeight(){
+        double tarHeight = 42;
+        return tarHeight;
+    }
+
+    public double getTheta(){
+        double h = getTargetHeight()-getMountedHeight();
+        double r = distanceGrab();
+        double theta = Math.atan((4*h/r));
+        return theta;
+    }
+
+    public double getVelocity(){
+        double x = distanceGrab();
+        double g = 32.17;
+        double theta = getTheta();
+        double sqrt = (x*g)/(2*Math.sin(theta));
+        double v = Math.sqrt((sqrt));
+        return v; 
+
+    }
+
+    
 }
