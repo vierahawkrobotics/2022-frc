@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -16,7 +17,6 @@ import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 public class Robot extends TimedRobot {
 
 Climb climb;
-
   @Override
   public void robotInit() {
     climb =  new Climb();
@@ -25,6 +25,6 @@ Climb climb;
   @Override
   public void teleopPeriodic() {
     climb.ClimbTestIter();
-    System.out.println(climb.arm.GetPos());
+    System.out.println("pos:"+climb.arm.GetPos());
   }
 }

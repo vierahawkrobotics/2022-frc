@@ -24,12 +24,8 @@ public class Climb {
      * requires "canInteract" to be true
      */
     public void ClimbTestIter() {
-        if(joystick.getRawButton(0) || !canInteract) {
-            arm.Stop();
-            return;
-        }
 
-        double a = joystick.getRawAxis(0);
+        double a = joystick.getRawAxis(3);
         arm.Set(a);
     }
 
@@ -44,13 +40,13 @@ public class Climb {
 
 class ElevatorArm {
 
-    static double speedMult = 0.3;
+    static double speedMult = 0.4;
     static double deadZone = 0.1;
     static double maxHeightPercent = 1;
 
     WPI_TalonSRX left;
     WPI_TalonSRX right;
-    PIDController controller;
+    PIDController pidController;
     /**
      * 
      * @param rightIndex the right arm index for can
@@ -58,22 +54,21 @@ class ElevatorArm {
      */
     public ElevatorArm(int rightIndex, int leftIndex) {
         //initiate pid
-        controller = new PIDController(0.03, 0, 0);
-        controller.setIntegratorRange(0, maxHeightPercent);
-        controller.setTolerance(0.02);
+        pidController = new PIDController(0.03, 0.01, 0);
+        pidController.setIntegratorRange(0, maxHeightPercent);
+        pidController.setTolerance(0.02);
         
         //initiate motors
-        left = new WPI_TalonSRX(leftIndex);
+        //left = new WPI_TalonSRX(leftIndex);
         right = new WPI_TalonSRX(rightIndex);
         right.configFactoryDefault();
-        left.configFactoryDefault();
+        //left.configFactoryDefault();
 
         //settings
-        right.configNeutralDeadband(deadZone);
         
         //config follower
-        left.setInverted(true);
-        left.follow(right);
+        //left.setInverted(true);
+        //left.follow(right);
 
         //right.getSelectedSensorPosition()
     }
@@ -84,21 +79,22 @@ class ElevatorArm {
      * @return if at target (returns controller.atSetpoint)
      */
     public boolean Set(double target) {
-        target = MathUtil.clamp(target, 0, maxHeightPercent);
+        target = MathUtil.clamp(target, -1, 1);
         //gets controller output (assuming input for motor)
-        double speed = controller.calculate(GetPos(), target);
+        double speed = pidController.calculate(GetPos(), target);
         //altering the speed
-        speed = MathUtil.clamp(speed, -1, 1);
+        speed = MathUtil.clamp(speed*100, -1, 1);
         speed *= speedMult;
+        System.out.println("speed:" + speed);
         //setting the speed
         right.set(speed);
         
         //returns if the controller is at the positions
-        return controller.atSetpoint();
+        return pidController.atSetpoint();
     }
 
     public double GetPos() {
-        double v = right.getSelectedSensorPosition();
+        double v = -right.getSelectedSensorPosition();
         // There are 360 UNITS per encoder rotation
 
         //https://www.andymark.com/products/climber-in-a-box
@@ -109,7 +105,7 @@ class ElevatorArm {
 
         double perUnit = 1;//start value
         perUnit *= 360;//amount of units per rotation
-        perUnit *= 4.93581426833;//amount of rotations to raise one stage
+        perUnit *= 1;//amount of rotations to raise one stage
         //perPulse /= 16;//if encoder is on motor, NOT AFTER motor, compensate for gearbox ratio
 
         //put info in calculator, the double should be percise enough for maximum percision. (perPulse calculation:11 decimals, double's max decimal:16)
@@ -118,6 +114,6 @@ class ElevatorArm {
 
     public void Stop() {
         right.stopMotor();
-        left.stopMotor();
+        //left.stopMotor();
     }
 }
