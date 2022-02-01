@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Notifier;
-import static java.lang.Math.*;
+//import edu.wpi.first.wpilibj.Notifier;
+//import static java.lang.Math.*;
 //import frc.robot.LemonTest;
 //import frc.robot.ControlPanel;
 
@@ -61,21 +61,26 @@ public class Lemonlight {
         return mountingAngle;
     }
     public double distanceGrab(){
-        //measurements in inches, sorry ik you need centimeters
+        //target height - camera height
         double distance = 0;
-        //a1 - Angle that the camera is mounted
-        double mountingAngle = getMountingAngle();
-        //a2 - retrieve from camera
-        double targetAngle = Lemonlight.getVertOffset();
-        //how tall camera is too floor
-        double mountedHeight = 36;
-        //heght of target off floor
-        double targetHeight = 23;
+        double heightOffset = getTargetHeight()-getMountedHeight();
+        double staticDistance = 107;
+        double readAngle = 1.73;
 
-        distance = (targetHeight-mountedHeight)/((Math.tan((mountingAngle+targetAngle) / 180 * 3.141592653589)));
+        //distance = (targetHeight-mountedHeight)/((Math.tan((mountingAngle+targetAngle) / 180 * 3.141592653589)));
+        double offset = GetDegreeOffset(staticDistance, heightOffset, readAngle);
+
+        double angle = Lemonlight.getVertOffset();// this in degrees
+
+        distance = (heightOffset)/((Math.sin((angle+offset) / 180 * Math.PI)));
         //distance = (targetHeight-mountedHeight)/((Math.tan(mountingAngle+targetAngle)));
         return distance;
     }
+
+    public static double GetDegreeOffset(double distance, double heightOffset, double currentAngle) {
+        return Math.asin(heightOffset / distance) / Math.PI * 180 - currentAngle;
+    }
+    
    
     public static double proportionalControlConstant(){
         double kp = -0.1;
@@ -111,7 +116,11 @@ public class Lemonlight {
         double sqrt = (x*g)/(2*Math.sin(theta));
         double v = Math.sqrt((sqrt));
         return v; 
+    }
 
+    public double getHypot(){
+        double hypot = Math.sqrt(distanceGrab()*distanceGrab()+(getTargetHeight()-getMountedHeight())*(getTargetHeight()-getMountedHeight()));
+        return hypot;
     }
 
     
