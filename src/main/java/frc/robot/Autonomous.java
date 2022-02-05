@@ -25,4 +25,10 @@ public class Autonomous {
         return distance-range;
     }
 
+    //first 15 seconds you need to get out and get a ball
+    public double getOut(){
+        double get = 3.045;
+        return get; 
+    }
+
 }

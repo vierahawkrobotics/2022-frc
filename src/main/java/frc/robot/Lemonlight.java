@@ -78,7 +78,7 @@ public class Lemonlight {
     }
 
     public static double GetDegreeOffset(double distance, double heightOffset, double currentAngle) {
-        return Math.asin(heightOffset / distance) / Math.PI * 180 - currentAngle;
+        return Math.asin(heightOffset / distance) / Math.PI * 180 - currentAngle; 
     }
     
    
