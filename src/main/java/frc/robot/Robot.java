@@ -16,28 +16,14 @@ import frc.robot.Lemonlight;
  * arcade steering.
  */
 public class Robot extends TimedRobot {
-
-Climb climb;
-  @Override
-  public void robotInit() {
-    climb =  new Climb();
-  }
-
-  @Override
-  public void teleopPeriodic() {
-    climb.ClimbTestIter();
-    System.out.println("pos:"+climb.arm.GetPos());
-  }
-}
-  private final Lemonlight JoshsLemon = new Lemonlight();
-
   Joystick joystick = new Joystick(0);
   DriveTrain driveTrain = new DriveTrain(joystick);
-  
+  private final Lemonlight JoshsLemon = new Lemonlight();
+
   @Override
   public void robotInit() {
     driveTrain.DriveTrainInit();
-}
+  }
 
   @Override
   public void teleopPeriodic() {
@@ -47,6 +33,7 @@ Climb climb;
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     // JoshsLemon.LemonLight();
+  
   }
 
 } 
