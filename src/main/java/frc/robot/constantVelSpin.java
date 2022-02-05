@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -25,10 +26,26 @@ public class constantVelSpin {
   private SparkMaxPIDController m_pidController;
   private RelativeEncoder m_encoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
-
+  Lemonlight ElisLemons = new Lemonlight();
   public constantVelSpin(CANSparkMax curMotor, XboxController curStick) {
     m_motor = curMotor;
     m_stick = curStick;
+  }
+
+
+  public double getAngularV() {
+      double linearV = ElisLemons.getVelocity();
+      double angularV = 0;
+      double radius = 2;
+      angularV= linearV/radius;
+      return angularV;
+  }
+
+  public double VtoRPM (){
+    double RPM =0;
+    double angularV = getAngularV();
+    RPM = (60*angularV)/(2*Math.PI);
+    return RPM;
   }
 
 
@@ -50,7 +67,7 @@ public class constantVelSpin {
 
     // Encoder object created to display position values
     m_encoder = m_motor.getEncoder();
-
+    ElisLemons.LemonTest();
     // PID coefficients
     kP = 6e-5; 
     kI = 0;
@@ -116,7 +133,7 @@ public class constantVelSpin {
      *  com.revrobotics.CANSparkMax.ControlType.kVelocity
      *  com.revrobotics.CANSparkMax.ControlType.kVoltage
      */
-    double setPoint = m_stick.getRawAxis(1)*maxRPM;
+    double setPoint = VtoRPM();
     m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
     //System.out.println(maxRPM);
     //System.out.println(m_stick.getRawAxis(1));
