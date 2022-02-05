@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.Lemonlight;
 
 /**
  * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
@@ -28,3 +29,24 @@ Climb climb;
     System.out.println("pos:"+climb.arm.GetPos());
   }
 }
+  private final Lemonlight JoshsLemon = new Lemonlight();
+
+  Joystick joystick = new Joystick(0);
+  DriveTrain driveTrain = new DriveTrain(joystick);
+  
+  @Override
+  public void robotInit() {
+    driveTrain.DriveTrainInit();
+}
+
+  @Override
+  public void teleopPeriodic() {
+    driveTrain.DriveTrainTeleop();
+    // driveTrain.goToAngle(25);
+    // We need to invert one side of the drivetrain so that positive voltages
+    // result in both sides moving forward. Depending on how your robot's
+    // gearbox is constructed, you might have to invert the left side instead.
+    // JoshsLemon.LemonLight();
+  }
+
+} 

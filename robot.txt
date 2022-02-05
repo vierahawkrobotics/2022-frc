@@ -1,1 +1,10 @@
 2022 FRC Wingspan 7431 Robot Electrical Configuration
+
+Front left	CIM	Talon Srx	PWM	1
+Back right	CIM	Talon Srx	PWM	2
+
+Front right	CIM	Talon Srx	PWM	3
+Back left	CIM	Talon Srx	PWM	4
+
+
+
