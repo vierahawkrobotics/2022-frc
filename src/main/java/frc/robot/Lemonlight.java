@@ -77,6 +77,21 @@ public class Lemonlight {
         return distance;
     }
 
+    public double seeking(){
+        double tx = getHorizontalOffset();
+        double kp = -.1;//Proportional Control Constant
+        double min = .05; // minimum amount needed to move robot
+        double error = -1*tx;
+        double steeringAdjust = kp*tx;
+        if(tx>1.0){
+            steeringAdjust= error*kp + min;
+        }
+        else if (tx<1.0) {
+            steeringAdjust = error*kp - min;
+        }
+        return steeringAdjust;
+
+    }
     public static double GetDegreeOffset(double distance, double heightOffset, double currentAngle) {
         return Math.asin(heightOffset / distance) / Math.PI * 180 - currentAngle; 
     }
