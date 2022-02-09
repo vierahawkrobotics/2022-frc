@@ -5,19 +5,30 @@ public class Autonomous {
 
     Lemonlight ParkersLemon = new Lemonlight();
 
+    /**
+     * 
+     * @return The amount you are adjusting steering by
+     */
     public double seeking(){
         //double offsetX = ParkersLemon.getHorizontalOffset();
         double valid = Lemonlight.validTarget();
-        double degreeTurn = 0;
+        double kp = -.1f;
+        double tx = ParkersLemon.getHorizontalOffset();
+        double steeringAdjust = 0;
         if(valid == 0.0){
-            degreeTurn = 10;
+            steeringAdjust = .3;
 
         }else{
-            degreeTurn = 0;
+            steeringAdjust = kp*tx;
+
         }
-        return degreeTurn;
+        return steeringAdjust;
     }
 
+    /**
+     * 
+     * @return how many inches you move forward
+     */
     public double getInRange(){
         double range = 1;
         double distance = ParkersLemon.distanceGrab();
@@ -29,7 +40,4 @@ public class Autonomous {
         double get = 3.045;
         return get; 
     }
-
-    //shootBall
-
 }
