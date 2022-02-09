@@ -1,6 +1,5 @@
 package frc.robot;
-import static java.lang.Math.*;
-//import frc.robot.LemonTest;
+
 
 public class Autonomous {
 
@@ -30,5 +29,7 @@ public class Autonomous {
         double get = 3.045;
         return get; 
     }
+
+    //shootBall
 
 }
