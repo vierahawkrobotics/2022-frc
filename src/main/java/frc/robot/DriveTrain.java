@@ -1,138 +1,142 @@
+/**
+ * @author Pranav Ponnusamy
+ */
+
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.InvertType;
-
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SPI;
 
-
+/** Represents a **differential** drive style drivetrain. */
 public class DriveTrain {
-    private final DifferentialDrive robotDrive;
+  /**
+   * Sets the max speed(m/s) of the robot
+   */
+  public static final double kMaxSpeed = 3.0; // meters per second  
+  public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
 
-    private WPI_TalonSRX leftDriveMotor1;
-    private WPI_TalonSRX leftFollower;
-    private WPI_TalonSRX rightDriveMotor1;
-    private WPI_TalonSRX rightFollower;
+  /**Sets the distance between the two wheels */
+  private static final double kTrackWidth = 0.5799666582; // meters 22.833333 inches 
+  private static final double kWheelRadius = 0.0762; // meters 3 inches
+  private static final int kEncoderResolution = 2048; 
 
-    private double driveP;
-    private double driveI;
-    private double driveD;
-    private double driveToleranceDegrees;
-
-    private double turnP;
-    private double turnI;
-    private double turnD;
-    private double turnTolerence;
-
-
-    private PIDController turnController;
-    private AHRS ahrs;
-
-    private double driveSetPoint;
-
-    private Joystick joystick;
-
-    
-
-    public DriveTrain(Joystick joystick){
-
-        this.joystick = joystick;
-
-        this.leftDriveMotor1  = new WPI_TalonSRX(DriveConstants.leftDriveMotorCanID);
-        this.rightDriveMotor1 = new WPI_TalonSRX(DriveConstants.rightDriveMotorCanID);
-        this.leftFollower  = new WPI_TalonSRX(DriveConstants.leftfollowerMotorCanID);
-        this.rightFollower = new WPI_TalonSRX(DriveConstants.rightfollowerMotorCanID);
-
-        this.driveP = DriveConstants.driveP;
-        this.driveI = DriveConstants.driveI;
-        this.driveD = DriveConstants.driveD;
-        
-        this.turnP = DriveConstants.turnP;
-        this.turnI = DriveConstants.turnI;
-        this.turnD = DriveConstants.turnD;
-        this.turnTolerence = DriveConstants.turnTolerence;
+  private final WPI_TalonSRX m_leftLeader = new WPI_TalonSRX(1);
+  private final WPI_TalonSRX m_leftFollower = new WPI_TalonSRX(4);
+  private final WPI_TalonSRX m_rightLeader = new WPI_TalonSRX(2);
+  private final WPI_TalonSRX m_rightFollower = new WPI_TalonSRX(3);
 
 
-       this.robotDrive = new DifferentialDrive(this.leftDriveMotor1, this.rightDriveMotor1);
-       this.turnController = turnController;
-       this.ahrs = ahrs;
-       this.driveSetPoint = 0;
-  }
+  private final MotorControllerGroup m_leftGroup =
+      new MotorControllerGroup(m_leftLeader, m_leftFollower);
+  private final MotorControllerGroup m_rightGroup =
+      new MotorControllerGroup(m_rightLeader, m_rightFollower);
 
-  public void DriveTrainInit() {
+  // private final AnalogGyro m_gyro = new AnalogGyro(0);
+  private final AHRS ahrs = new AHRS(SPI.Port.kMXP);
+
+  private final PIDController m_leftPIDController = new PIDController(0, 0, 0);
+  private final PIDController m_rightPIDController = new PIDController(0, 0, 0);
+
+  private final DifferentialDriveKinematics m_kinematics =
+      new DifferentialDriveKinematics(kTrackWidth);
+
+  // private final DifferentialDriveOdometry m_odometry;
+
+  // Gains are for example purposes only - must be determined for your own robot!
+  private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
+
+  /**
+   * Constructs a differential drive object. Sets the encoder distance per pulse and resets the
+   * gyro.
+   */
+
+
+  public DriveTrain() {
+    ahrs.zeroYaw();
+
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
+    m_rightGroup.setInverted(true);
 
-    rightDriveMotor1.setInverted(true);
-    leftDriveMotor1.setInverted(false);
+    // Set the distance per pulse for the drive encoders. We can simply use the
+    // distance traveled for one rotation of the wheel divided by the encoder
+    // resolution.
 
-    rightFollower.setInverted(InvertType.FollowMaster);
-    leftFollower.setInverted(InvertType.FollowMaster);
+    // m_odometry = new DifferentialDriveOdometry(ahrs.getRotation2d());
 
-    rightFollower.follow(rightDriveMotor1);
-    leftFollower.follow(leftFollower);
+    m_leftLeader.configClearPositionOnQuadIdx(true, 0);
+  }
 
+  /**
+   * 
+   * Gets the speed in m/s of the right side of the robot
+   */
+  public double getLeftRate(){
+    // number of ticks per 100 ms -> m/s
+    return m_leftLeader.getSelectedSensorVelocity() * (2 * Math.PI * kWheelRadius / kEncoderResolution);
+  }
 
-    try { // attempt to instantiate the NavX2. If it throws an exception, catch it and
-      // report it.
-  ahrs = new AHRS(SPI.Port.kMXP); // SPI is the protocol on the MXP connector that the navigator is plugged into
-} catch (RuntimeException ex) {
-  DriverStation.reportError("Error instantiating navX2 MXP:  " + ex.getMessage(), true);
-}
+  /**
+   * 
+   * Gets the speed in m/s of the right side of the robot
+   */
+  public double getrightRate(){
+    // number of ticks per 100 ms -> m/s
+    return m_rightLeader.getSelectedSensorVelocity() * (2 * Math.PI * kWheelRadius / kEncoderResolution);
+  }
 
-  turnController = new PIDController(driveP, driveI, driveD);
-  turnController.enableContinuousInput(-180.0f, 180.0f);
-  turnController.setTolerance(driveToleranceDegrees);
-  ahrs.zeroYaw();
-  turnController.setSetpoint(ahrs.getYaw());
+  /**
+   * Sets the desired wheel speeds.
+   *
+   * @param speeds The desired wheel speeds.
+   */
+  public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
+    final double leftFeedforward = m_feedforward.calculate(speeds.leftMetersPerSecond);
+    final double rightFeedforward = m_feedforward.calculate(speeds.rightMetersPerSecond);
 
-  driveSetPoint = 0;
+    final double leftOutput =
+        m_leftPIDController.calculate(getLeftRate(), speeds.leftMetersPerSecond);
+    final double rightOutput =  
+        m_rightPIDController.calculate(getrightRate(), speeds.rightMetersPerSecond);
+    m_leftGroup.setVoltage(leftOutput + leftFeedforward);
+    m_rightGroup.setVoltage(rightOutput + rightFeedforward);
+  }
 
-}
+  /**
+   * Drives the robot with the given linear velocity and angular velocity.
+   *
+   * @param xSpeed Linear velocity in m/s.
+   * @param rot Angular velocity in rad/s.
+   */
+  @SuppressWarnings("ParameterName")
+  public void drive(double xSpeed, double rot) {
+    var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
+    setSpeeds(wheelSpeeds);
+  }
 
-    public void DriveTrainTeleop(){
-            // Drive with arcade drive.
-            // That means that the Y axis drives forward
-            // and backward, and the X turns left and right.
-        
-        
-            double driveZ = joystick.getZ();
-        
-            double rotateToAngleRate = turnController.calculate(ahrs.getYaw(), driveSetPoint);
-            // double forward = Math.pow(100, joystick.getY() - 1) - 0.01; // Sign this so forward is positive
-            double forward = joystick.getY(); // Sign this so forward is positive
-        
-            // double turn = -0.5 * joystick.getZ();
-        
-            System.out.println("Z: " + joystick.getZ());
-            System.out.println("Setpoint: " + driveSetPoint);
-
-
-            if (driveZ < -0.2 || driveZ > 0.2){
-                driveSetPoint+=driveZ*0.4; //this is 20 degrees per second
-            }
-        
-            robotDrive.arcadeDrive(forward, rotateToAngleRate);
-        }
-    
-
-    public void goToAngle(double rotateSetPoint){
-        //give it an angle and it will turn
-
-        double forward = 0;
-        double rotateToAngleRate = turnController.calculate(ahrs.getYaw(), rotateSetPoint);
-        robotDrive.arcadeDrive(forward, rotateToAngleRate);
-    }
-
-    public double getCurrentAngle(){
-        return ahrs.getYaw();
-    }
-
+  /** Updates the field-relative position. */
+  // public void updateOdometry() {
+  //   m_odometry.update(
+  //       ahrs.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+  // }
 }
