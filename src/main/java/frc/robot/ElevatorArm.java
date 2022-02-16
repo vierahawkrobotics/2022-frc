@@ -10,12 +10,19 @@ class ElevatorArm {
     WPI_TalonSRX right;
     PIDController pidController;
     public double maxSpeed = 1;
+    boolean exsists;
+
+    public ElevatorArm() {
+        exsists = false;
+    }
+
     /**
      * 
      * @param rightIndex the right arm index for can
      * @param leftIndex the left arm index for can
      */
     public ElevatorArm(int rightIndex, int leftIndex) {
+        exsists = true;
         //initiate pid
         pidController = new PIDController(0.015, 0.007, 0);
         pidController.setTolerance(0.02);
@@ -44,6 +51,8 @@ class ElevatorArm {
      * @return if at target (returns controller.atSetpoint)
      */
     public boolean Set(double target) {
+        if(!exsists) return false;
+
         target = MathUtil.clamp(target, -1, 1);
         //gets controller output (assuming input for motor)
         double speed = pidController.calculate(GetPos(), target);
@@ -59,6 +68,8 @@ class ElevatorArm {
     }
 
     public double GetPos() {
+        if(!exsists) return 0;
+
         double v = -right.getSelectedSensorPosition();
         // There are 360 UNITS per encoder rotation
 
@@ -70,8 +81,8 @@ class ElevatorArm {
 
         double perUnit = 1;//start value
         perUnit *= 360;//amount of units per rotation
-        perUnit *= 4.9358;//amount of rotations to raise one stage
-        //perPulse /= 16;//if encoder is on motor, NOT AFTER motor, compensate for gearbox ratio
+        perUnit *= 1;//amount of rotations to raise one stage
+        //perPulse *= 16;//if encoder is on motor, NOT AFTER motor, compensate for gearbox ratio
 
         //put info in calculator, the double should be percise enough for maximum percision. (perPulse calculation:11 decimals, double's max decimal:16)
         return v / perUnit;

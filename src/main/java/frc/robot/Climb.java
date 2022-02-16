@@ -1,29 +1,28 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-
-//using cim motors (dont know how to use in code)
-//using three sets of arms (havent implemented, only one arm that doesn't have final port ids)
-//COMPLETELY UNTESTED, probably works?
 public class Climb {
 
-    Joystick joystick = new Joystick(0);
-    public ElevatorArm arm;
-    /**stops the elevators when false */
-    boolean canInteract;
-
+    ElevatorArmAnimator anim;
+    public boolean cont;
     public Climb() {
-        arm = new ElevatorArm(1, -1);//set ints for roborio ports, not set properly
+        anim = new ElevatorArmAnimator(new ElevatorArm(1, -1), new ElevatorArm(), 1);
+        anim.itters = new EAItter[] {
+            new EAItter(1, 0, 1, 1),
+            new EAItter(0, 1, 1, 1),
+            new EAItter(0.5, 0.5, 1, 1),
+            new EAItter(0.25, 0.5, 1, 1),
+            new EAItter(0.8, 0.5, 1, 1),
+        };
     }
 
-    /**
-     * used in robot periodic, takes a predefined axis from a predefined joystick and uses that as a percent on how far the elevator extends.
-     * requires "canInteract" to be true
-     */
-    public void ClimbTestIter() {
+    public void Start() {
+        anim.Start();
+    }
 
-        double a = joystick.getRawAxis(3);
-        arm.Set(a);
+    public void Itterate() {
+        if(cont) {
+            cont = anim.Update();                
+        }
     }
 
     // State change

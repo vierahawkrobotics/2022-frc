@@ -19,10 +19,14 @@ public class Robot extends TimedRobot {
   Joystick joystick = new Joystick(0);
   DriveTrain driveTrain = new DriveTrain(joystick);
   private final Lemonlight JoshsLemon = new Lemonlight();
+  Climb climb;
 
   @Override
   public void robotInit() {
     driveTrain.DriveTrainInit();
+
+    climb = new  Climb();
+    climb.Start();
   }
 
   @Override
@@ -33,6 +37,8 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     // JoshsLemon.LemonLight();
+
+    climb.Itterate();
   
   }
 

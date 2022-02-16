@@ -5,14 +5,25 @@ import com.ctre.phoenix.time.StopWatch;
 public class ElevatorArmAnimator {
     public ElevatorArm armA;
     public ElevatorArm armB;
-    public float delay;
+    public double delay;
     public EAItter[] itters;
     double prevIterTime;
     int index;
     StopWatch timer;
 
-    public ElevatorArmAnimator(ElevatorArm armA) {
+    public ElevatorArmAnimator(ElevatorArm armA, ElevatorArm armB, double delay) {
+        this.delay = delay;
+        this.armA = armA;
+        this.armB = armB;
+        timer = new StopWatch();
+        index = 0;
+        prevIterTime = 0;
+    }
 
+    public void Start() {
+        timer.start();
+        index = 0;
+        prevIterTime = 0;
     }
 
     public boolean Update() {
