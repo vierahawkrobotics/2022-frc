@@ -16,10 +16,10 @@ public class Autonomous {
         double tx = ParkersLemon.getHorizontalOffset();
         double steeringAdjust = 0;
         if(valid == 0.0){
-            steeringAdjust = .3;
+            steeringAdjust = tx*Math.PI/180;
 
         }else{
-            steeringAdjust = kp*tx;
+            steeringAdjust = 0;
 
         }
         return steeringAdjust;
@@ -32,10 +32,13 @@ public class Autonomous {
     public double getInRange(){
         double range = 1;
         double distance = ParkersLemon.distanceGrab();
-        return distance-range;
+        return distance-range; 
     }
 
-    //first 15 seconds you need to get out and get a ball
+    /**
+     * 
+     * @return getting out of zone during 15 second autonomous period
+     */
     public double getOut(){
         double get = 3.045;
         return get; 

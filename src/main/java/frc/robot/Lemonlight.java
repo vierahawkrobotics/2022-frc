@@ -71,7 +71,16 @@ public class Lemonlight {
         return c;
     }
 
+    /**
+     * @returns if liemlight detects a reflective tape
+     */
+    public static double validTarget(){
+        NetworkTableEntry tv = m_table.getEntry("tv");
+        double b = tv.getDouble(0.0);
+        return b;
+    }
 
+    
     /**
      * This will vary on the actual robot, it just 
      * gives the angle the limelight is mounted at
@@ -81,62 +90,11 @@ public class Lemonlight {
         double mountingAngle = -10;
         return mountingAngle;
     }
-    /**
-     * @return distance from limeLight to a piece of reflective tape
-     */
-    public double distanceGrab(){
-        //target height - camera height
-        double distance = 0;
-        double heightOffset = getTargetHeight()-getMountedHeight();
-        double staticDistance = 107;
-        double readAngle = 1.73;
 
-        double offset = GetDegreeOffset(staticDistance, heightOffset, readAngle);
-
-        double angle = Lemonlight.getVertOffset();// this in degrees
-
-        distance = (heightOffset)/((Math.sin((angle+offset) / 180 * Math.PI)));
-        return distance;
-    }
-    /**
-     * If it sees a valid target, it will line up with it
-     * Needs work, no longer works with PID
-     * @return adjustment necessary for driveTrain
-     */
-    public double Aiming(){
-        double tx = getHorizontalOffset();
-        double kp = -.1;//Proportional Control Constant
-        double min = .05; // minimum amount needed to move robot
-        double error = -1*tx;
-        double steeringAdjust = kp*tx;
-        if(tx>1.0){
-            steeringAdjust= error*kp + min;
-        }
-        else if (tx<1.0) {
-            steeringAdjust = error*kp - min;
-        }
-        return steeringAdjust;
-
-    }
-
-    /**
-     * 
-     * @param distance distance from limelight to robot
-     * @param heightOffset targetHeight - moutned Height
-     * @param currentAngle The current mounted Angle
-     * @return Complete degree offset in limelight
-     */
     public static double GetDegreeOffset(double distance, double heightOffset, double currentAngle) {
         return Math.asin(heightOffset / distance) / Math.PI * 180 - currentAngle; 
     }
-    /**
-     * @returns if liemlight detects a reflective tape
-     */
-    public static double validTarget(){
-        NetworkTableEntry tv = m_table.getEntry("tv");
-        double b = tv.getDouble(0.0);
-        return b;
-    }
+    
     /**
      * 
      * @return height of limelight on robot to floor
@@ -169,20 +127,82 @@ public class Lemonlight {
      */
     public double getVelocity(){
         double x = distanceGrab();
-        double g = 32.17;
+        double g = 32.17*12;
         double theta = getTheta();
         double sqrt = (x*g)/(2*Math.sin(theta));
         double v = Math.sqrt((sqrt));
         return v; 
     }
-
     /**
-     * @return True distance to reflective tape, hypotenuse of horizonatal distance and vertical distance
+     * @return distance from limeLight to a piece of reflective tape
+     */
+    public double distanceGrab(){
+        //target height - camera height
+        double distance = 0;
+        double heightOffset = getTargetHeight()-getMountedHeight();
+        double staticDistance = 107;
+        double readAngle = 1.73;
+
+        double offset = GetDegreeOffset(staticDistance, heightOffset, readAngle);
+
+        double angle = Lemonlight.getVertOffset();// this in degrees
+
+        distance = (heightOffset)/((Math.sin((angle+offset) / 180 * Math.PI)));
+        return distance;
+    }
+
+     /**
+     * @return double True distance to reflective tape, hypotenuse of horizonatal distance and vertical distance
      */
     public double getHypot(){
         double hypot = Math.sqrt(distanceGrab()*distanceGrab()+(getTargetHeight()-getMountedHeight())*(getTargetHeight()-getMountedHeight()));
         return hypot;
     }
 
+    /**
+     * If it sees a valid target, it will line up with it
+     * Needs work, no longer works with PID
+     * @return double adjustment necessary for driveTrain
+     */
+    // public double Aiming(){
+    //     double tx = getHorizontalOffset();
+    //     double kp = -.1;//Proportional Control Constant
+    //     double min = .05; // minimum amount needed to move robot
+    //     double error = -1*tx;
+    //     double steeringAdjust = kp*tx;
+    //     if(tx>1.0){
+    //         steeringAdjust= error*kp + min;
+    //     }
+    //     else if (tx<1.0) {
+    //         steeringAdjust = error*kp - min;
+    //     }
+    //     return steeringAdjust;
+
+    // }
+
+    public double Aiming(){
+        double rad = 0;
+        double offset = getHorizontalOffset();
+        double valid = validTarget();
+
+        if (valid == 1.0){
+            rad = (Math.PI/180);
+        }else{
+            rad = offset*(Math.PI/180);
+        }
+
+        return rad;
+    }
+
+    /**
+     * 
+     * @param distance distance from limelight to robot
+     * @param heightOffset targetHeight - moutned Height
+     * @param currentAngle The current mounted Angle
+     * @return Complete degree offset in limelight
+     */
+    
+
+   
     
 }
