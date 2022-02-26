@@ -92,7 +92,7 @@ public class Lemonlight {
     }
 
     public static double GetDegreeOffset(double distance, double heightOffset, double currentAngle) {
-        return Math.asin(heightOffset / distance) / Math.PI * 180 - currentAngle; 
+        return Math.atan(heightOffset / distance) / Math.PI * 180 - currentAngle; 
     }
     
     /**
@@ -116,9 +116,10 @@ public class Lemonlight {
      * @return gives the angle of launch
      */
     public double getTheta(){
-        double h = getTargetHeight()-getMountedHeight();
-        double r = distanceGrab();
-        double theta = Math.atan((4*h/r));
+        // double h = getTargetHeight()-getMountedHeight();
+        // double r = distanceGrab();
+        // double theta = Math.atan((4*h/r));
+        double theta = 45;
         return theta;
     }
 
@@ -126,7 +127,7 @@ public class Lemonlight {
      * @return gives the required velocity to lauch ball a certain distance
      */
     public double getVelocity(){
-        double x = distanceGrab();
+        double x = doubleDistance();
         double g = 32.17*12;
         double theta = getTheta();
         double sqrt = (x*g)/(2*Math.sin(theta));
@@ -147,10 +148,13 @@ public class Lemonlight {
 
         double angle = Lemonlight.getVertOffset();// this in degrees
 
-        distance = (heightOffset)/((Math.sin((angle+offset) / 180 * Math.PI)));
+        distance = (heightOffset)/((Math.tan((angle+offset) / 180 * Math.PI)));
         return distance;
     }
-
+    
+    public double doubleDistance(){
+        return 2*distanceGrab();
+    }
      /**
      * @return double True distance to reflective tape, hypotenuse of horizonatal distance and vertical distance
      */

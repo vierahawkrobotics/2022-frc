@@ -33,7 +33,11 @@ public class ColorSensor {
    * with given confidence range.
    */
     private final ColorMatch m_colorMatcher = new ColorMatch();
-  
+    
+    /**
+     * 
+     * @return a color value for what color ball is in the belt
+     */
     public String ColorToString(){
         String Color = "";
         //Color sensed = m_colorSensor.getColor();

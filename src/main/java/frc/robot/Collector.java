@@ -10,7 +10,9 @@ public class Collector {
     private WPI_TalonSRX bottomFeeder = new WPI_TalonSRX(1);
     private WPI_TalonSRX topFeeder = new WPI_TalonSRX(2);
     double speed = .1;
-
+    /**
+     * @return if the ball should move up the conveyor belt or not
+     */
     public void moveUp(){
         String color = sensor.ColorToString();
         if(color == "Green"){
