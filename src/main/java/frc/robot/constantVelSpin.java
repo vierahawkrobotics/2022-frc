@@ -58,7 +58,9 @@ public class constantVelSpin {
     return RPM;
   }
 
-
+  /**
+   * Puts PID coefficients on SmartDashboard 
+   */
   public void motorInit() {
     // initialize motor
     /**
@@ -107,7 +109,12 @@ public class constantVelSpin {
     SmartDashboard.putNumber("Max Output", kMaxOutput);
     SmartDashboard.putNumber("Min Output", kMinOutput);
   }
-
+  /**
+   * Uses PID to make sure motors are spinning at the same speed
+   * The function also inverts the motor based on the constructor
+   * Gets PID from SmartDashboard
+   * Also sets speeds for the motor to spin at using velocity translation to RPM
+   */
   public void motorTeleop() {
     // read PID coefficients from SmartDashboard
     double p = SmartDashboard.getNumber("P Gain", 0);
