@@ -1,7 +1,3 @@
-/**
- * @author Pranav Ponnusamy
- */
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -28,10 +24,9 @@ import edu.wpi.first.wpilibj.SPI;
 
 /** Represents a **differential** drive style drivetrain. */
 public class DriveTrain {
-  /**
-   * Sets the max speed(m/s) of the robot
-   */
-  public static final double kMaxSpeed = 3.0; // meters per second  
+  /** Sets the max linear speed(m/s) of the robot*/
+  public static final double kMaxSpeed = 3.0; // meters per second
+  /**Sets the max angular speed of the robot (m/s) */  
   public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
 
   /**Sets the distance between the two wheels */
@@ -65,11 +60,9 @@ public class DriveTrain {
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
 
   /**
-   * Constructs a differential drive object. Sets the encoder distance per pulse and resets the
-   * gyro.
+   * Constructs a DriveTrain object. Inverts the right side motors and resets the
+   * gyro. Also, resets the 
    */
-
-
   public DriveTrain() {
     ahrs.zeroYaw();
 
@@ -83,13 +76,12 @@ public class DriveTrain {
     // resolution.
 
     // m_odometry = new DifferentialDriveOdometry(ahrs.getRotation2d());
-
-    m_leftLeader.configClearPositionOnQuadIdx(true, 0);
   }
 
   /**
    * 
    * Gets the speed in m/s of the right side of the robot
+   * @return double
    */
   public double getLeftRate(){
     // number of ticks per 100 ms -> m/s
@@ -99,6 +91,7 @@ public class DriveTrain {
   /**
    * 
    * Gets the speed in m/s of the right side of the robot
+   * @return double
    */
   public double getrightRate(){
     // number of ticks per 100 ms -> m/s
@@ -106,7 +99,8 @@ public class DriveTrain {
   }
 
   /**
-   * Sets the desired wheel speeds.
+   * Sets the desired wheel speeds by converting it from linear(m/s) and and angular velocites 
+   * into a motor output. Also uses a PID and feedforward. 
    *
    * @param speeds The desired wheel speeds.
    */
