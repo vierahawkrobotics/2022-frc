@@ -26,25 +26,35 @@ public class constantVelSpin {
   private SparkMaxPIDController m_pidController;
   private RelativeEncoder m_encoder;
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
+  private boolean invert;
   Lemonlight ElisLemons = new Lemonlight();
-  public constantVelSpin(CANSparkMax curMotor, XboxController curStick) {
+
+  public constantVelSpin(CANSparkMax curMotor, XboxController curStick, boolean curInvert) {
     m_motor = curMotor;
     m_stick = curStick;
+    invert = curInvert;
   }
-
-
+  /**
+   * 
+   * @return the angular velocity necessary
+   */
   public double getAngularV() {
       double linearV = ElisLemons.getVelocity();
       double angularV = 0;
-      double radius = 2;
-      angularV= linearV/radius;
+      double radius = 2; //inches
+      angularV= linearV/radius; //rad/sec
       return angularV;
   }
 
+  /**
+   * 
+   * @return returns an RPM by converting Angular Velocity to it
+   */
   public double VtoRPM (){
     double RPM =0;
     double angularV = getAngularV();
     RPM = (60*angularV)/(2*Math.PI);
+    System.out.println("DOGE: " + RPM);
     return RPM;
   }
 
@@ -69,16 +79,16 @@ public class constantVelSpin {
     m_encoder = m_motor.getEncoder();
     ElisLemons.LemonTest();
     // PID coefficients
-    kP = 6e-5; 
+    kP = 0; //6e-5; 
     kI = 0;
     kD = 0; 
     kIz = 0; 
     kFF = 0.000015; 
     kMaxOutput = 1; 
     kMinOutput = -1;
-    maxRPM = 5700;
+    maxRPM = 5000;
 
-    // set PID coefficients
+    // set PID coefficients7
     m_pidController.setP(kP);
     m_pidController.setI(kI);
     m_pidController.setD(kD);
@@ -133,11 +143,31 @@ public class constantVelSpin {
      *  com.revrobotics.CANSparkMax.ControlType.kVelocity
      *  com.revrobotics.CANSparkMax.ControlType.kVoltage
      */
-    double setPoint = VtoRPM();
+
+    //double setPoint = VtoRPM();
+    double setPoint = VtoRPM()/5000;
+    if (invert) {
+      setPoint = -setPoint;
+    }
     m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+
+    //this is just to make stuff spin
+    m_motor.set(setPoint);
+
+    //this is just to integrate limelight with it
+    //m_motor.set(VtoRPM());
+
     //System.out.println(maxRPM);
     //System.out.println(m_stick.getRawAxis(1));
     SmartDashboard.putNumber("SetPoint", setPoint);
     SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
+  }
+
+  /**
+   * 
+   * @return encoder values
+   */
+  public double getEncoder(){
+    return m_encoder.getVelocity();
   }
 }

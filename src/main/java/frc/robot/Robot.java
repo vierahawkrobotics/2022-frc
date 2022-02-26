@@ -21,22 +21,22 @@ public class Robot extends TimedRobot {
   private XboxController m_stick = new XboxController(0);
   private CANSparkMax leftSpinnyBoi = new CANSparkMax(1, MotorType.kBrushless);
   private CANSparkMax rightSpinnyBoi = new CANSparkMax(2, MotorType.kBrushless);
-  private constantVelSpin leftConstantVel = new constantVelSpin(leftSpinnyBoi, m_stick);
-  private constantVelSpin rightConstantVel = new constantVelSpin(rightSpinnyBoi, m_stick);
+  private constantVelSpin leftConstantVel = new constantVelSpin(leftSpinnyBoi, m_stick, false);
+  private constantVelSpin rightConstantVel = new constantVelSpin(rightSpinnyBoi, m_stick, true);
 
   Joystick joystick = new Joystick(1);
-  DriveTrain driveTrain = new DriveTrain(joystick);
+  //DriveTrain driveTrain = new DriveTrain(joystick);
   
   @Override
   public void robotInit() {
-    driveTrain.DriveTrainInit();
+    //driveTrain.DriveTrainInit();
     leftConstantVel.motorInit();
     rightConstantVel.motorInit();
 }
 
   @Override
   public void teleopPeriodic() {
-    driveTrain.DriveTrainTeleop();
+    //driveTrain.DriveTrainTeleop();
     // driveTrain.goToAngle(25);
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
@@ -44,6 +44,9 @@ public class Robot extends TimedRobot {
     // JoshsLemon.LemonLight();
     leftConstantVel.motorTeleop();
     rightConstantVel.motorTeleop();
-  }
+    System.out.print(leftConstantVel.getEncoder());
+    System.out.print(rightConstantVel.getEncoder());
 
+    
+  }
 } 
