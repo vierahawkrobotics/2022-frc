@@ -127,7 +127,7 @@ public class Lemonlight {
      * @return gives the required velocity to lauch ball a certain distance
      */
     public double getVelocity(){
-        double x = doubleDistance();
+        double x = distanceGrab();
         double g = 32.17*12;
         double theta = getTheta();
         double sqrt = (x*g)/(2*Math.sin(theta));
@@ -152,9 +152,9 @@ public class Lemonlight {
         return distance;
     }
     
-    public double doubleDistance(){
-        return 2*distanceGrab();
-    }
+    // public double doubleDistance(){
+    //     return 2*distanceGrab();
+    // }
      /**
      * @return double True distance to reflective tape, hypotenuse of horizonatal distance and vertical distance
      */
