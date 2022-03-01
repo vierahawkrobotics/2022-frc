@@ -26,24 +26,39 @@ public class Robot extends TimedRobot {
   private final SlewRateLimiter m_speedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
 
+  static boolean turnButtonPressed = false;
+  static boolean driveButtonPressed = false;
   
   @Override
   public void teleopPeriodic() {
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
-    final var xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * DriveTrain.kMaxSpeed;
+
 
     // Get the rate of angular rotation. We are inverting this because we want a
     // positive value when we pull to the left (remember, CCW is positive in
     // mathematics). Xbox controllers return positive values when you pull to
     // the right by default.
-    final var rot = -m_rotLimiter.calculate(m_controller.getZ()) * DriveTrain.kMaxAngularSpeed;
-
-    System.out.println(m_drive.getLeftRate());
-    System.out.println(m_drive.getrightRate());
-    
+    var xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * 0;
+    var rot = -m_rotLimiter.calculate(m_controller.getZ()) * 0;
       
-      m_drive.drive(xSpeed, rot);
+    if ((Math.abs(m_controller.getY()) > 0.2)){
+      xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * DrivetrainConstants.kMaxSpeed;
+     }
+    else{}
+    if ((Math.abs(m_controller.getZ()) > 0.2)){
+      rot = -m_rotLimiter.calculate(m_controller.getZ()) * DrivetrainConstants.kMaxAngularSpeed;
   }
 
-} 
+  if (m_controller.getRawButtonPressed(3)){
+    Robot.turnButtonPressed = true;
+  }
+  else{}
+
+  if(Robot.turnButtonPressed){
+    m_drive.gotoAngle(90);
+  }
+  else{
+  }
+  }
+}

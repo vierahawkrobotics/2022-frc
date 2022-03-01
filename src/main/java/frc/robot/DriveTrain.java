@@ -59,6 +59,19 @@ public class DriveTrain {
   // Gains are for example purposes only - must be determined for your own robot!
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
 
+  double start;
+
+  double turnStartTime;
+  double currentTime;
+  double turnFinishTime;
+
+  double driveStartTime;
+  double driveFinishTime;
+
+  TurnMode turnState = TurnMode.READY_TO_TURN;
+  DriveMode driveState = DriveMode.READY_TO_DRIVE;
+
+
   /**
    * Constructs a DriveTrain object. Inverts the right side motors and resets the
    * gyro. Also, resets the 
@@ -76,6 +89,11 @@ public class DriveTrain {
     // resolution.
 
     // m_odometry = new DifferentialDriveOdometry(ahrs.getRotation2d());
+    this.start =  System.currentTimeMillis();
+    m_leftLeader.setNeutralMode(DrivetrainConstants.driveMode);
+    m_leftFollower.setNeutralMode(DrivetrainConstants.driveMode);
+    m_rightLeader.setNeutralMode(DrivetrainConstants.driveMode);
+    m_rightFollower.setNeutralMode(DrivetrainConstants.driveMode);
   }
 
   /**
@@ -93,11 +111,18 @@ public class DriveTrain {
    * Gets the speed in m/s of the right side of the robot
    * @return double
    */
-  public double getrightRate(){
+  public double getRightRate(){
     // number of ticks per 100 ms -> m/s
     return m_rightLeader.getSelectedSensorVelocity() * (2 * Math.PI * kWheelRadius / kEncoderResolution);
   }
 
+  public double getLeftDistance(){
+    return (m_leftLeader.getSelectedSensorPosition()/DrivetrainConstants.kEncoderResolution) * (2 * Math.PI * DrivetrainConstants.kWheelRadius);
+  }
+  public double getRightDistance(){
+    return (m_rightLeader.getSelectedSensorPosition()/DrivetrainConstants.kEncoderResolution) * (2 * Math.PI * DrivetrainConstants.kWheelRadius);
+  }
+  
   /**
    * Sets the desired wheel speeds by converting it from linear(m/s) and and angular velocites 
    * into a motor output. Also uses a PID and feedforward. 
@@ -111,7 +136,12 @@ public class DriveTrain {
     final double leftOutput =
         m_leftPIDController.calculate(getLeftRate(), speeds.leftMetersPerSecond);
     final double rightOutput =  
-        m_rightPIDController.calculate(getrightRate(), speeds.rightMetersPerSecond);
+        m_rightPIDController.calculate(getRightRate(), speeds.rightMetersPerSecond);
+    
+    double finish = System.currentTimeMillis();
+
+    System.out.println((finish - this.start)/(1000.0) + "   "  + -getLeftRate() + "   " +  getRightRate() + "   " + speeds.leftMetersPerSecond);
+    
     m_leftGroup.setVoltage(leftOutput + leftFeedforward);
     m_rightGroup.setVoltage(rightOutput + rightFeedforward);
   }
@@ -133,4 +163,67 @@ public class DriveTrain {
   //   m_odometry.update(
   //       ahrs.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
   // }
+/**
+   * Turns the robot to a particular angle
+   * @param angle angle in degrees
+   */
+  public void gotoAngle(double angle){
+
+    switch(turnState){
+      case READY_TO_TURN:
+        if (Math.abs(angle) > 0){
+          angle = Math.toRadians(angle);
+          Double totalTurnTime = (angle/DrivetrainConstants.autoTurnSpeed)*1000;
+          this.turnStartTime = System.currentTimeMillis();
+          this.turnFinishTime = this.turnStartTime + totalTurnTime;
+          turnState = TurnMode.TURNING;
+          this.drive(0, DrivetrainConstants.autoTurnSpeed);
+        }
+        break;
+      case TURNING:
+        this.currentTime = System.currentTimeMillis();
+        if (currentTime < turnFinishTime){
+          this.drive(0, DrivetrainConstants.autoTurnSpeed);
+        }
+        else{
+          turnStartTime = 0;
+          turnFinishTime = 0;
+          currentTime = 0;
+          this.drive(0, 0);
+          Robot.turnButtonPressed = false;
+          turnState = TurnMode.READY_TO_TURN; 
+        }
+        
+    }
+  }
+
+  public void goDistance(double distance){
+
+    switch(driveState){
+      case READY_TO_DRIVE:
+        if (Math.abs(distance) > 0){
+          Double totalDrivetime = (distance/DrivetrainConstants.autoLinearSpeed) * 1000;
+          this.driveStartTime = System.currentTimeMillis();
+          this.driveFinishTime = this.driveStartTime + totalDrivetime;
+          driveState = DriveMode.DRIVING;
+          this.drive(DrivetrainConstants.autoLinearSpeed, 0);
+        }
+        break;
+      case DRIVING:
+        this.currentTime = System.currentTimeMillis();
+        if (currentTime < driveFinishTime){
+          this.drive(DrivetrainConstants.autoLinearSpeed,0);
+        }
+        else{
+          driveStartTime = 0;
+          driveFinishTime = 0;
+          currentTime = 0;
+          this.drive(0, 0);
+          Robot.driveButtonPressed = false;
+          driveState = DriveMode.READY_TO_DRIVE; 
+        }
+        
+    }
+
+  }
 }
