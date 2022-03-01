@@ -21,6 +21,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class Robot extends TimedRobot {
   private final Lemonlight JoshsLemon = new Lemonlight();
+  private final Autonomous auto = new Autonomous();
 
   private XboxController m_stick = new XboxController(0);
   private CANSparkMax leftSpinnyBoi = new CANSparkMax(1, MotorType.kBrushless);
@@ -72,6 +73,19 @@ public class Robot extends TimedRobot {
     else{
       front.set(0);
       back.set(0);
+    }
+
+    if(joystick.getRawButton(4)){
+      auto.seeking();
+    }
+
+    if(joystick.getRawButton(5)){
+      auto.Aiming();
+    }
+
+    if(joystick.getRawButton(6)){
+      auto.seeking();
+      auto.Aiming();
     }
 
     double driveY = joystick.getY();

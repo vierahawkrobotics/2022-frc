@@ -164,7 +164,7 @@ public class Lemonlight {
         double angle = Lemonlight.getVertOffset();// this in degrees
 
         distance = (heightOffset)/((Math.tan((angle+offset) / 180 * Math.PI)));
-        return distance+12;
+        return distance+24;
     }
     
     // public double doubleDistance(){

@@ -39,7 +39,7 @@ public class constantVelSpin {
    * @return the angular velocity necessary
    */
   public double getAngularV() {
-      double linearV = ElisLemons.getVelocity()*1.1;
+      double linearV = ElisLemons.getVelocity();
       double angularV = 0;
       double radius = 2; //inches
       angularV= linearV/radius; //rad/sec
