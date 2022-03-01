@@ -13,7 +13,7 @@ public class Autonomous {
         //double offsetX = ParkersLemon.getHorizontalOffset();
         double valid = Lemonlight.validTarget();
         double kp = -.1f;
-        double tx = ParkersLemon.getHorizontalOffset();
+        double tx = Lemonlight.getHorizontalOffset();
         double steeringAdjust = 0;
         if(valid == 0.0){
             steeringAdjust = tx*Math.PI/180;
@@ -25,12 +25,27 @@ public class Autonomous {
         return steeringAdjust;
     }
 
+    public double Aiming(){
+        double rad = 0;
+        double offset = Lemonlight.getHorizontalOffset();
+        double valid = Lemonlight.validTarget();
+
+        if (valid == 1.0){
+            rad = (Math.PI/180);
+        }else{
+            rad = offset*(Math.PI/180);
+        }
+
+        return rad;
+    }
+
+
     /**
      * 
      * @return how many inches you move forward
      */
     public double getInRange(){
-        double range = 1;
+        double range = 12*12;
         double distance = ParkersLemon.distanceGrab();
         return distance-range; 
     }

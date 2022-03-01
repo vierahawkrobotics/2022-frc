@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.robot.Lemonlight;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
+import com.ctre.phoenix.motorcontrol.InvertType;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -21,8 +25,14 @@ public class Robot extends TimedRobot {
   private XboxController m_stick = new XboxController(0);
   private CANSparkMax leftSpinnyBoi = new CANSparkMax(1, MotorType.kBrushless);
   private CANSparkMax rightSpinnyBoi = new CANSparkMax(2, MotorType.kBrushless);
+  WPI_TalonSRX front = new WPI_TalonSRX(7);
+  WPI_TalonSRX back = new WPI_TalonSRX(8);
   private constantVelSpin leftConstantVel = new constantVelSpin(leftSpinnyBoi, m_stick, false);
   private constantVelSpin rightConstantVel = new constantVelSpin(rightSpinnyBoi, m_stick, true);
+
+  WPI_TalonSRX leftleader = new WPI_TalonSRX(1);
+  WPI_TalonSRX rightleader = new WPI_TalonSRX(3);
+  DifferentialDrive drive = new DifferentialDrive(leftleader, rightleader);
 
   Joystick joystick = new Joystick(1);
   //DriveTrain driveTrain = new DriveTrain(joystick);
@@ -32,6 +42,7 @@ public class Robot extends TimedRobot {
     //driveTrain.DriveTrainInit();
     leftConstantVel.motorInit();
     rightConstantVel.motorInit();
+    leftleader.setInverted(InvertType.InvertMotorOutput);
 }
 
   @Override
@@ -42,10 +53,36 @@ public class Robot extends TimedRobot {
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     // JoshsLemon.LemonLight();
-    leftConstantVel.motorTeleop();
-    rightConstantVel.motorTeleop();
-    System.out.print(leftConstantVel.getEncoder());
-    System.out.print(rightConstantVel.getEncoder());
+    if(joystick.getRawButton(1)){
+      leftConstantVel.motorTeleop();
+      rightConstantVel.motorTeleop();
+    }else{
+      leftConstantVel.stop();
+      rightConstantVel.stop();
+    }
+    
+    if(joystick.getRawButton(2)) {
+      front.set(.9);
+      back.set(.9);
+    }
+    else if (joystick.getRawButton(3)) {
+      front.set(-.9);
+      back.set(-.9);
+    }
+    else{
+      front.set(0);
+      back.set(0);
+    }
+
+    double driveY = joystick.getY();
+    double driveZ = joystick.getZ();
+
+    drive.arcadeDrive(driveY, driveZ);
+
+
+    //System.out.print(leftConstantVel.getEncoder());
+    //System.out.print(rightConstantVel.getEncoder());
+    System.out.println(JoshsLemon.distanceGrab());
 
     
   }

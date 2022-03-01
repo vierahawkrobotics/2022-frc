@@ -39,7 +39,7 @@ public class constantVelSpin {
    * @return the angular velocity necessary
    */
   public double getAngularV() {
-      double linearV = ElisLemons.getVelocity();
+      double linearV = ElisLemons.getVelocity()*1.1;
       double angularV = 0;
       double radius = 2; //inches
       angularV= linearV/radius; //rad/sec
@@ -47,6 +47,7 @@ public class constantVelSpin {
   }
 
   /**
+   * 
    * 
    * @return returns an RPM by converting Angular Velocity to it
    */
@@ -176,5 +177,9 @@ public class constantVelSpin {
    */
   public double getEncoder(){
     return m_encoder.getVelocity();
+  }
+
+  public void stop(){
+    m_motor.set(0);
   }
 }
