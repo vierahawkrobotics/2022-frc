@@ -88,6 +88,18 @@ public class Robot extends TimedRobot {
       auto.Aiming();
     }
 
+    if(joystick.getRawButton(7)){
+      auto.getInRange();
+    }
+
+    if(joystick.getRawButton(8)){
+      leftConstantVel.manualShooter(2000);
+      rightConstantVel.manualShooter(-2000);
+    }else{
+      leftConstantVel.stop();
+      rightConstantVel.stop();
+    }
+
     double driveY = joystick.getY();
     double driveZ = joystick.getZ();
 
