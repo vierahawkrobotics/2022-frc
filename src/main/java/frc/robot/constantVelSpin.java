@@ -58,6 +58,10 @@ public class constantVelSpin {
     System.out.println("DOGE: " + RPM);
     return RPM;
   }
+  //
+  public void manualShooter(double RPM){
+    m_motor.set(RPM/5000);
+    }
 
   /**
    * Puts PID coefficients on SmartDashboard 
