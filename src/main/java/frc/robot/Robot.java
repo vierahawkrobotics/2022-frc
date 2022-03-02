@@ -14,9 +14,11 @@ import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 
 /**
- * This is a demo program showing the use of the DifferentialDrive class. Runs the motors with
+ * This is a demo program showing the use of the DifferentialDrive class. Runs
+ * the motors with
  * arcade steering.
  */
 public class Robot extends TimedRobot {
@@ -36,80 +38,108 @@ public class Robot extends TimedRobot {
   DifferentialDrive drive = new DifferentialDrive(leftleader, rightleader);
 
   Joystick joystick = new Joystick(1);
-  //DriveTrain driveTrain = new DriveTrain(joystick);
-  
+  // DriveTrain driveTrain = new DriveTrain(joystick);
+
+  // private final XboxController m_controller = new XboxController(0);
+  private final Joystick m_controller = new Joystick(0);
+  private final DriveTrain m_drive = new DriveTrain();
+
+  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
+  private final SlewRateLimiter m_speedLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
+
+  static boolean turnButtonPressed = false;
+  static boolean driveButtonPressed = false;
+
   @Override
   public void robotInit() {
-    //driveTrain.DriveTrainInit();
+    // driveTrain.DriveTrainInit();
     leftConstantVel.motorInit();
     rightConstantVel.motorInit();
     leftleader.setInverted(InvertType.InvertMotorOutput);
-}
+  }
 
   @Override
   public void teleopPeriodic() {
-    //driveTrain.DriveTrainTeleop();
+    // driveTrain.DriveTrainTeleop();
     // driveTrain.goToAngle(25);
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     // JoshsLemon.LemonLight();
-    if(joystick.getRawButton(1)){
+    if (joystick.getRawButton(1)) {
       leftConstantVel.motorTeleop();
       rightConstantVel.motorTeleop();
-    }else{
+    } else {
       leftConstantVel.stop();
       rightConstantVel.stop();
     }
-    
-    if(joystick.getRawButton(2)) {
+
+    if (joystick.getRawButton(2)) {
       front.set(.9);
       back.set(.9);
-    }
-    else if (joystick.getRawButton(3)) {
+    } else if (joystick.getRawButton(3)) {
       front.set(-.9);
       back.set(-.9);
-    }
-    else{
+    } else {
       front.set(0);
       back.set(0);
     }
 
-    if(joystick.getRawButton(4)){
+    if (joystick.getRawButton(4)) {
       auto.seeking();
     }
 
-    if(joystick.getRawButton(5)){
+    if (joystick.getRawButton(5)) {
       auto.Aiming();
     }
 
-    if(joystick.getRawButton(6)){
+    if (joystick.getRawButton(6)) {
       auto.seeking();
       auto.Aiming();
     }
 
-    if(joystick.getRawButton(7)){
+    if (joystick.getRawButton(7)) {
       auto.getInRange();
     }
 
-    if(joystick.getRawButton(8)){
+    if (joystick.getRawButton(8)) {
       leftConstantVel.manualShooter(2000);
       rightConstantVel.manualShooter(-2000);
-    }else{
+    } else {
       leftConstantVel.stop();
       rightConstantVel.stop();
     }
-
-    double driveY = joystick.getY();
-    double driveZ = joystick.getZ();
-
-    drive.arcadeDrive(driveY, driveZ);
-
-
-    //System.out.print(leftConstantVel.getEncoder());
-    //System.out.print(rightConstantVel.getEncoder());
+    // System.out.print(leftConstantVel.getEncoder());
+    // System.out.print(rightConstantVel.getEncoder());
     System.out.println(JoshsLemon.distanceGrab());
+    // Get the x speed. We are inverting this because Xbox controllers return
+    // negative values when we push forward.
 
-    
+    // Get the rate of angular rotation. We are inverting this because we want a
+    // positive value when we pull to the left (remember, CCW is positive in
+    // mathematics). Xbox controllers return positive values when you pull to
+    // the right by default.
+    var xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * 0;
+    var rot = -m_rotLimiter.calculate(m_controller.getZ()) * 0;
+
+    if ((Math.abs(m_controller.getY()) > 0.2)) {
+      xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * DrivetrainConstants.kMaxSpeed;
+    } else {
+    }
+    if ((Math.abs(m_controller.getZ()) > 0.2)) {
+      rot = -m_rotLimiter.calculate(m_controller.getZ()) * DrivetrainConstants.kMaxAngularSpeed;
+    }
+
+    if (m_controller.getRawButtonPressed(3)) {
+      Robot.turnButtonPressed = true;
+    } else {
+    }
+
+    if (Robot.turnButtonPressed) {
+      m_drive.gotoAngle(90);
+    } else {
+      m_drive.drive(xSpeed, rot);
+    }
   }
-} 
+}
