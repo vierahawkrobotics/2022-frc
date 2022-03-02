@@ -1,12 +1,8 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-
 public class ClimbNoEncoder {
     ElevatorArm armA;
     ElevatorArm armB;
-
-    DigitalInput limit = new DigitalInput(2);
 
     public boolean cont;
     boolean prev;
@@ -17,11 +13,11 @@ public class ClimbNoEncoder {
      * @param canB can ID for the another set of arms
      * @param maxSpeed the maxSpeed of both arms
      */
-    public ClimbNoEncoder(int canA, int canB, double maxSpeed) {
-        armA = new ElevatorArm(canA);
-        armB = new ElevatorArm(canB);
-        armA.maxSpeed = maxSpeed;
-        armB.maxSpeed = maxSpeed;
+    public ClimbNoEncoder(int canA, int canB, int startDigitalInput) {
+        armA = new ElevatorArm(canA,startDigitalInput,startDigitalInput+1);
+        armB = new ElevatorArm(canB,startDigitalInput+2,startDigitalInput+3);
+        armA.maxSpeed = 0.2;
+        armB.maxSpeed = 0.4;
         cont = true;
     }
 
@@ -42,16 +38,5 @@ public class ClimbNoEncoder {
         }
         armA.SetSpeed(speedA);
         armB.SetSpeed(speedB);
-
-        boolean next = ReadSensor();
-        
-        if(prev && !next) {
-            cont = false;
-        }
-        prev = next;
-    }
-
-    boolean ReadSensor() {
-        return limit.get();
     }
 }

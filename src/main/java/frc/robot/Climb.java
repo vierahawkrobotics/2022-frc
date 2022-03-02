@@ -2,8 +2,13 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+/**
+ * @deprecated
+ */
 public class Climb {
 
     /**The animation controller for the climber mechanism */
@@ -14,7 +19,7 @@ public class Climb {
      * Initiates new climber preset to an animation
      */
     public Climb() {
-        anim = new ElevatorArmAnimator(new ElevatorArm(1), new ElevatorArm(), 1);
+        anim = new ElevatorArmAnimator(new ElevatorArm(1,0,1), new ElevatorArm(), 1);
         anim.itters = new EAItter[] {
             new EAItter(1, 0, 1, 1),
             new EAItter(0, 1, 1, 1),
@@ -49,6 +54,8 @@ class ElevatorArm {
     WPI_TalonSRX right;
     PIDController pidController;
     public double maxSpeed = 1;
+    DigitalInput min;
+    DigitalInput max;
     boolean exsists;
 
     /**initiates an arm for testing, will not spin any motors */
@@ -58,17 +65,19 @@ class ElevatorArm {
 
     /**
      * initiates motors for arm
-     * @param rightIndex the right arm index for can ID
+     * @param index the right arm index for can ID
+     * @param digitalMin ID for min sensor
+     * @param digitalMax ID for max sensor
      */
-    public ElevatorArm(int rightIndex) {
+    public ElevatorArm(int index, int digitalMin, int digitalMax) {
         exsists = true;
-        //initiate pid
-        pidController = new PIDController(0.015, 0.007, 0);
-        pidController.setTolerance(0.02);
         
         //initiate motors
-        right = new WPI_TalonSRX(rightIndex);
+        right = new WPI_TalonSRX(index);
         right.configFactoryDefault();
+
+        min = new DigitalInput(digitalMin);
+        max = new DigitalInput(digitalMax);
     }
 
     /**
@@ -98,6 +107,9 @@ class ElevatorArm {
      * @param speed speed to be set to motor
     */
     public void SetSpeed(double speed) {
+        if(min.get() && speed < 0) speed = 0;
+        if(max.get() && speed > 0) speed = 0;
+
         right.set(speed*maxSpeed);
     }
 
