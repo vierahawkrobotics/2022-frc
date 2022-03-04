@@ -11,7 +11,7 @@ public class ClimbNoEncoder {
      * initiates a climber without encoders
      * @param canA can ID for the one set of arms
      * @param canB can ID for the another set of arms
-     * @param maxSpeed the maxSpeed of both arms
+     * @param startDigitalInput the start of the 4 switches, incremented by 1
      */
     public ClimbNoEncoder(int canA, int canB, int startDigitalInput) {
         armA = new ElevatorArm(canA,startDigitalInput,startDigitalInput+1);
