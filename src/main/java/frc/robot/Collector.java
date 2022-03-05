@@ -76,22 +76,23 @@ public class Collector {
     //     }
     // }
 
-    // public Color UpdateColor(){
-    //     Color color = kBlackTarget;
-    //     switch (colorSeen){
-    //         case Red:
-    //             color = kRedTarget;
-    //             change motor speed
-    //             break;
-    //         case Blue:
-    //             color = kBlueTarget;
-    //          change motor speed
-    //             break;
-    //         case Abyss:
-    //             color = kBlackTarget;
-    //             change motor speed;
-    //             break;
-    //     }
+    public Color UpdateColor(){
+        Color color = kBlackTarget;
+        switch (colorSeen){
+            case Red:
+                color = kRedTarget;
+                //change motor speed
+                break;
+            case Blue:
+                color = kBlueTarget;
+             //change motor speed
+                break;
+            case Abyss:
+                color = kBlackTarget;
+              //  change motor speed;
+                break;
+        }
+        }
 
         //return color;
     //}
