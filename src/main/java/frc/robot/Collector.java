@@ -76,7 +76,7 @@ public class Collector {
     //     }
     // }
 
-    public Color UpdateColor(){
+    public void UpdateColor(){
         Color color = kBlackTarget;
         switch (colorSeen){
             case Red:
