@@ -91,6 +91,15 @@ public class Lemonlight {
         return mountingAngle;
     }
 
+     /**
+     * 
+     * @param distance distance from limelight to robot
+     * @param heightOffset targetHeight - moutned Height
+     * @param currentAngle The current mounted Angle
+     * @return Complete degree offset in limelight
+     */
+    
+
     public static double GetDegreeOffset(double distance, double heightOffset, double currentAngle) {
         return Math.atan(heightOffset / distance) / Math.PI * 180 - currentAngle; 
     }
@@ -100,7 +109,7 @@ public class Lemonlight {
      * @return height of limelight on robot to floor
      */
     public double getMountedHeight(){
-        double mountHeight = 36;
+        double mountHeight = 32.5;
         return mountHeight;
     }
 
@@ -108,7 +117,7 @@ public class Lemonlight {
      * @return Height of target, 9 feet on game day
      */
     public double getTargetHeight(){
-        double tarHeight = 42;
+        double tarHeight = 105;
         return tarHeight;
     }
 
@@ -119,20 +128,26 @@ public class Lemonlight {
         // double h = getTargetHeight()-getMountedHeight();
         // double r = distanceGrab();
         // double theta = Math.atan((4*h/r));
-        double theta = 45;
-        return theta;
+        double theta = 76;
+        return theta; //degrees
     }
 
     /**
      * @return gives the required velocity to lauch ball a certain distance
      */
     public double getVelocity(){
-        double x = distanceGrab();
-        double g = 32.17*12;
-        double theta = getTheta();
-        double sqrt = (x*g)/(2*Math.sin(theta));
-        double v = Math.sqrt((sqrt));
-        return v; 
+        double distance = distanceGrab();//inches
+        double heightFinal = getTargetHeight();//inches
+        double heightInitial = getMountedHeight();//inches
+        double gravity = -4.9*3.28*12; //inches
+        double toDeg = Math.PI/180;
+        double theta = getTheta()*toDeg;
+        double delta = heightFinal-heightInitial; //inches
+        double sqrt = (delta-(Math.tan(theta)*distance))/(gravity);
+        double denom = Math.cos(theta)*Math.sqrt(sqrt);
+        double velocity = distance/denom;
+
+        return velocity; //inches
     }
     /**
      * @return distance from limeLight to a piece of reflective tape
@@ -141,15 +156,15 @@ public class Lemonlight {
         //target height - camera height
         double distance = 0;
         double heightOffset = getTargetHeight()-getMountedHeight();
-        double staticDistance = 107;
-        double readAngle = 1.73;
+        double staticDistance = 16*12;
+        double readAngle = 1.6;
 
         double offset = GetDegreeOffset(staticDistance, heightOffset, readAngle);
 
         double angle = Lemonlight.getVertOffset();// this in degrees
 
         distance = (heightOffset)/((Math.tan((angle+offset) / 180 * Math.PI)));
-        return distance;
+        return distance+24;
     }
     
     // public double doubleDistance(){
@@ -184,28 +199,8 @@ public class Lemonlight {
 
     // }
 
-    public double Aiming(){
-        double rad = 0;
-        double offset = getHorizontalOffset();
-        double valid = validTarget();
-
-        if (valid == 1.0){
-            rad = (Math.PI/180);
-        }else{
-            rad = offset*(Math.PI/180);
-        }
-
-        return rad;
-    }
-
-    /**
-     * 
-     * @param distance distance from limelight to robot
-     * @param heightOffset targetHeight - moutned Height
-     * @param currentAngle The current mounted Angle
-     * @return Complete degree offset in limelight
-     */
     
+   
 
    
     

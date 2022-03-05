@@ -7,16 +7,15 @@ public class Autonomous {
 
     /**
      * 
-     * @return The amount you are adjusting steering by
+     * @return In degress, how much you are changing the steering by
+     * to see the reflective when it doesnt see it
      */
     public double seeking(){
         //double offsetX = ParkersLemon.getHorizontalOffset();
         double valid = Lemonlight.validTarget();
-        double kp = -.1f;
-        double tx = ParkersLemon.getHorizontalOffset();
         double steeringAdjust = 0;
         if(valid == 0.0){
-            steeringAdjust = tx*Math.PI/180;
+            steeringAdjust = 30;
 
         }else{
             steeringAdjust = 0;
@@ -24,14 +23,34 @@ public class Autonomous {
         }
         return steeringAdjust;
     }
+    /**
+     * 
+     * @return In degress the amount you are adjusting the
+     * robot to line it up with the reflective tape
+     */
+    public double Aiming(){
+        double rad = 0;
+        double offset = Lemonlight.getHorizontalOffset();
+        double valid = Lemonlight.validTarget();
+        double steeringAdjust = 0;
+
+        if (offset>=1){
+            steeringAdjust = offset;
+        }else{
+            steeringAdjust = 0;
+        }
+
+        return rad;
+    }
+
 
     /**
      * 
      * @return how many inches you move forward
      */
     public double getInRange(){
-        double range = 1;
-        double distance = ParkersLemon.distanceGrab();
+        double range = 3.28;
+        double distance = ParkersLemon.distanceGrab()/(12*3.28);
         return distance-range; 
     }
 

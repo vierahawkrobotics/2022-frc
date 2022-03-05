@@ -48,6 +48,7 @@ public class constantVelSpin {
 
   /**
    * 
+   * 
    * @return returns an RPM by converting Angular Velocity to it
    */
   public double VtoRPM (){
@@ -57,6 +58,10 @@ public class constantVelSpin {
     System.out.println("DOGE: " + RPM);
     return RPM;
   }
+  //
+  public void manualShooter(double RPM){
+    m_motor.set(RPM/5000);
+    }
 
   /**
    * Puts PID coefficients on SmartDashboard 
@@ -176,5 +181,9 @@ public class constantVelSpin {
    */
   public double getEncoder(){
     return m_encoder.getVelocity();
+  }
+
+  public void stop(){
+    m_motor.set(0);
   }
 }
