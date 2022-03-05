@@ -29,9 +29,7 @@ public class Autonomous {
      * robot to line it up with the reflective tape
      */
     public double Aiming(){
-        double rad = 0;
         double offset = Lemonlight.getHorizontalOffset();
-        double valid = Lemonlight.validTarget();
         double steeringAdjust = 0;
 
         if (offset>=1){
@@ -40,7 +38,7 @@ public class Autonomous {
             steeringAdjust = 0;
         }
 
-        return rad;
+        return steeringAdjust;
     }
 
 
