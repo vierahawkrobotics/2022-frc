@@ -14,7 +14,7 @@ public class Collector {
    // private WPI_TalonSRX bottomFeeder = new WPI_TalonSRX(1);
     //private WPI_TalonSRX topFeeder = new WPI_TalonSRX(2);
     double speed = .1;
-    Servo servoArm;
+    Servo servoArm = new Servo(0);
     /**
      * Change the I2C port below to match the connection of your color sensor
      */
@@ -51,7 +51,7 @@ public class Collector {
     int[] states = {1,0,1,0};
 
 
-    public ServoState servoState;
+    public ServoState servoState = ServoState.Open;
     public ColorSeen colorSeen;
 
     /**
@@ -110,7 +110,8 @@ public class Collector {
             } else if (match.color == kRedTarget) {
                 colorString = "Red";
                 colorSeen = ColorSeen.Red;
-            } else if (match.color == kBlackTarget){
+            } else {
+                colorString = "Black";
                 colorSeen = ColorSeen.Abyss;
             }
 

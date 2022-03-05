@@ -20,6 +20,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 public class Robot extends TimedRobot {
   private final Lemonlight JoshsLemon = new Lemonlight();
   private final Autonomous auto = new Autonomous();
+  private final Collector coll = new Collector();
 
   private XboxController m_stick = new XboxController(0);
   private CANSparkMax leftSpinnyBoi = new CANSparkMax(1, MotorType.kBrushless);
@@ -55,6 +56,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //REMOVE THIS TESTING ONLY
+    System.out.println(coll.putDash());
     leftSpinnyBoi.set(0);
     rightSpinnyBoi.set(0);
     front.set(0);
@@ -142,5 +144,7 @@ public class Robot extends TimedRobot {
     } else {
       m_drive.drive(xSpeed, rot);
     }
+
+    coll.CollectorTeleop(m_xbox.getRawButton(9), m_xbox.getRawButton(10));
   }
 }
