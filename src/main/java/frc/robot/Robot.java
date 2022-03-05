@@ -138,17 +138,12 @@ public class Robot extends TimedRobot {
     }
 
     if (Robot.turnButtonPressed) {
-<<<<<<< HEAD
-      m_drive.gotoAngle(-90);
-    } else {
-=======
       m_drive.gotoAngle(90);
     } 
     else if (m_xbox.getRawButton(5)) {
       m_drive.gotoAngle(-Lemonlight.getHorizontalOffset()*2);
     }
     else {
->>>>>>> lE-mOn-LiG-hT
       m_drive.drive(xSpeed, rot);
     }
 
