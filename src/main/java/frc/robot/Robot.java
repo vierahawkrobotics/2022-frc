@@ -87,9 +87,7 @@ public class Robot extends TimedRobot {
       auto.seeking();
     }
 
-    if (m_xbox.getRawButton(5)) {
-      auto.Aiming();
-    }
+    
 
     if (m_xbox.getRawButton(6)) {
       auto.seeking();
@@ -139,7 +137,11 @@ public class Robot extends TimedRobot {
 
     if (Robot.turnButtonPressed) {
       m_drive.gotoAngle(90);
-    } else {
+    } 
+    else if (m_xbox.getRawButton(5)) {
+      m_drive.gotoAngle(-Lemonlight.getHorizontalOffset()*2);
+    }
+    else {
       m_drive.drive(xSpeed, rot);
     }
   }

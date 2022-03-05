@@ -109,7 +109,7 @@ public class Lemonlight {
      * @return height of limelight on robot to floor
      */
     public double getMountedHeight(){
-        double mountHeight = 32.5;
+        double mountHeight = 26;
         return mountHeight;
     }
 
@@ -117,7 +117,7 @@ public class Lemonlight {
      * @return Height of target, 9 feet on game day
      */
     public double getTargetHeight(){
-        double tarHeight = 105;
+        double tarHeight = 8*12+9;
         return tarHeight;
     }
 
@@ -156,8 +156,8 @@ public class Lemonlight {
         //target height - camera height
         double distance = 0;
         double heightOffset = getTargetHeight()-getMountedHeight();
-        double staticDistance = 16*12;
-        double readAngle = 1.6;
+        double staticDistance = 125;
+        double readAngle = -3.09;
 
         double offset = GetDegreeOffset(staticDistance, heightOffset, readAngle);
 
