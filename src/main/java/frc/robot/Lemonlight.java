@@ -128,7 +128,7 @@ public class Lemonlight {
         // double h = getTargetHeight()-getMountedHeight();
         // double r = distanceGrab();
         // double theta = Math.atan((4*h/r));
-        double theta = 76;
+        double theta = 74;
         return theta; //degrees
     }
 
