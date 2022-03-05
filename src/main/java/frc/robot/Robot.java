@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
     }
 
     if (Robot.turnButtonPressed) {
-      m_drive.gotoAngle(90);
+      m_drive.gotoAngle(-90);
     } else {
       m_drive.drive(xSpeed, rot);
     }
