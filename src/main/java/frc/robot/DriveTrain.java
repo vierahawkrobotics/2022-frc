@@ -168,22 +168,25 @@ public class DriveTrain {
    * @param angle angle in degrees
    */
   public void gotoAngle(double angle){
-
+    int reverse = 1;
+    if (angle < 0) {
+      reverse = -reverse;
+    }
     switch(turnState){
       case READY_TO_TURN:
         if (Math.abs(angle) > 0){
           angle = Math.toRadians(angle);
-          Double totalTurnTime = (angle/DrivetrainConstants.autoTurnSpeed)*1000;
+          Double totalTurnTime = (Math.abs(angle)/DrivetrainConstants.autoTurnSpeed)*2000;
           this.turnStartTime = System.currentTimeMillis();
           this.turnFinishTime = this.turnStartTime + totalTurnTime;
           turnState = TurnMode.TURNING;
-          this.drive(0, DrivetrainConstants.autoTurnSpeed);
+          this.drive(0, DrivetrainConstants.autoTurnSpeed * reverse);
         }
         break;
       case TURNING:
         this.currentTime = System.currentTimeMillis();
         if (currentTime < turnFinishTime){
-          this.drive(0, DrivetrainConstants.autoTurnSpeed);
+          this.drive(0, DrivetrainConstants.autoTurnSpeed * reverse);
         }
         else{
           turnStartTime = 0;
