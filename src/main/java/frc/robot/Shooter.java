@@ -174,7 +174,7 @@ public class Shooter {
                 shootStartTime = System.currentTimeMillis();
             }
             //if three seconds since pushing the button has elapsed, do shootything
-            if (System.currentTimeMillis() >= shootStartTime + 3000) {
+            if (System.currentTimeMillis() >= shootStartTime + 2000) {
                 // move servo to allow balls to move into shooter
                 servoState = ServoState.Open;
                 // run collector motors
