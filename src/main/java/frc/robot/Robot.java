@@ -18,18 +18,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
  * arcade steering.
  */
 public class Robot extends TimedRobot {
-  private final Lemonlight JoshsLemon = new Lemonlight();
-  private final Autonomous auto = new Autonomous();
-  private final Collector coll = new Collector();
-
-  private XboxController m_stick = new XboxController(0);
-  private CANSparkMax leftSpinnyBoi = new CANSparkMax(1, MotorType.kBrushless);
-  private CANSparkMax rightSpinnyBoi = new CANSparkMax(2, MotorType.kBrushless);
-  WPI_TalonSRX front = new WPI_TalonSRX(7);
-  WPI_TalonSRX back = new WPI_TalonSRX(8);
-  private constantVelSpin leftConstantVel = new constantVelSpin(leftSpinnyBoi, m_stick, false);
-  private constantVelSpin rightConstantVel = new constantVelSpin(rightSpinnyBoi, m_stick, true);
-
+  
+  private final Shooter shoot = new Shooter();  
 
   private final XboxController m_xbox = new XboxController(1);
   private final Joystick m_controller = new Joystick(0);
@@ -47,8 +37,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    leftConstantVel.motorInit();
-    rightConstantVel.motorInit();
+    shoot.shooterInit();
     xSpeed = 0;
     rot = 0;
   }
@@ -56,60 +45,13 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //REMOVE THIS TESTING ONLY
-    System.out.println(coll.putDash());
-    leftSpinnyBoi.set(0);
-    rightSpinnyBoi.set(0);
-    front.set(0);
-    back.set(0);
+    System.out.println(shoot.putDash());
     // driveTrain.goToAngle(25);
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
     // gearbox is constructed, you might have to invert the left side instead.
     // JoshsLemon.LemonLight();
-    if (m_xbox.getRawButton(1)) {
-      leftConstantVel.motorTeleop();
-      rightConstantVel.motorTeleop();
-    } else {
-      leftConstantVel.stop();
-      rightConstantVel.stop();
-    }
-
-    if (m_xbox.getRawButton(2)) {
-      front.set(.9);
-      back.set(.9);
-    } else if (m_xbox.getRawButton(3)) {
-      front.set(-.9);
-      back.set(-.9);
-    } else {
-      front.set(0);
-      back.set(0);
-    }
-
-    if (m_xbox.getRawButton(4)) {
-      auto.seeking();
-    }
-
     
-
-    if (m_xbox.getRawButton(6)) {
-      auto.seeking();
-      auto.Aiming();
-    }
-
-    if (m_xbox.getRawButton(7)) {
-      auto.getInRange();
-    }
-
-    if (m_xbox.getRawButton(8)) {
-      leftConstantVel.manualShooter(2000);
-      rightConstantVel.manualShooter(-2000);
-    } else {
-      leftConstantVel.stop();
-      rightConstantVel.stop();
-    }
-    // System.out.print(leftConstantVel.getEncoder());
-    // System.out.print(rightConstantVel.getEncoder());
-    System.out.println(JoshsLemon.distanceGrab());
     // Get the x speed. We are inverting this because Xbox controllers return
     // negative values when we push forward.
 
@@ -147,6 +89,6 @@ public class Robot extends TimedRobot {
       m_drive.drive(xSpeed, rot);
     }
 
-    coll.CollectorTeleop(m_xbox.getRawButton(9), m_xbox.getRawButton(10));
+    shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_controller.getRawButton(11), m_controller.getRawButton(12), m_controller.getRawButton(10));
   }
 }

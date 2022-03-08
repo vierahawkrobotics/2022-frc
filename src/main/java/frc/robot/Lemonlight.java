@@ -40,7 +40,7 @@ public class Lemonlight {
     * initialization function, need to call this in 
     * order to use Lemonlight functions
     */
-   public void LemonTest() {
+   public void initTheLemon() {
         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
    }
 
