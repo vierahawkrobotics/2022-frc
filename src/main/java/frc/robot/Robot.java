@@ -46,6 +46,14 @@ public class Robot extends TimedRobot {
   }
 
   @Override
+  public void autonomousPeriodic() {
+    m_drive.drive(0, 0);
+    shoot.shooterTeleop(false, false, false, false, false);
+    climb.Teleop(false, false, false);
+    
+  }
+
+  @Override
   public void teleopPeriodic() {
     //REMOVE THIS TESTING ONLY
     System.out.println(shoot.putDash());
@@ -80,6 +88,7 @@ public class Robot extends TimedRobot {
     if (m_controller.getRawButtonPressed(3)) {
       Robot.turnButtonPressed = true;
     } else {
+      
     }
 
     if (Robot.turnButtonPressed) {
@@ -91,8 +100,10 @@ public class Robot extends TimedRobot {
     else {
       m_drive.drive(xSpeed, rot);
     }
-    shoot.shooterTeleop(false, m_controller.getRawButton(2), m_controller.getRawButton(11), m_controller.getRawButton(12), m_controller.getRawButton(10));
-    shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
-    climb.Teleop(m_controller.getRawButton(6), m_controller.getRawButton(4), m_controller.getRawButton(5));
+    shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
+    //shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
+    climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6));
   }
+
+
 }

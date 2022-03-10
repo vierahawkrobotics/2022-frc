@@ -29,20 +29,24 @@ public class Climb {
 
     public void Teleop(boolean up, boolean down, boolean smallDown) {
         if(up) InterpMode(ClimberMode.Up);
-        if(down) InterpMode(ClimberMode.Down);
-        if(smallDown) InterpMode(ClimberMode.SmallDown);
+        else if(down) InterpMode(ClimberMode.Down);
+        else if(smallDown) InterpMode(ClimberMode.SmallDown);
+        else InterpMode(ClimberMode.doNothing);
     }
 
     void InterpMode(ClimberMode mode) {
         switch(mode) {
             case Down:
-                Set(-.4);
+                Set(.4);
                 break;
             case SmallDown:
-                Set(-0.15);
+                Set(0.15);
                 break;
             case Up:
-                Set(.4);
+                Set(-.4);
+                break;
+            case doNothing:
+                Set(0);
                 break;
             default:
                 break;
@@ -54,4 +58,5 @@ enum ClimberMode {
     Up,
     Down,
     SmallDown,
+    doNothing
 }

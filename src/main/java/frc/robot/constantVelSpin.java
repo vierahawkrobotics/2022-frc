@@ -179,7 +179,8 @@ public class constantVelSpin {
       SmartDashboard.putNumber("SetPoint", setPoint);
       SmartDashboard.putNumber("ProcessVariable", m_encoder.getVelocity());
 
-    } else {
+    } 
+    else {
       System.out.println("NO SHOOT NO SHOOT");
       m_motor.stopMotor();
     }
