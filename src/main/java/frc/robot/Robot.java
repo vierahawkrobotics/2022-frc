@@ -25,6 +25,8 @@ public class Robot extends TimedRobot {
   private final Joystick m_controller = new Joystick(0);
   private final DriveTrain m_drive = new DriveTrain();
 
+  private final Autonomous autonomous = new Autonomous();
+
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private final SlewRateLimiter m_speedLimiter = new SlewRateLimiter(3);
   private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
@@ -47,9 +49,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-    m_drive.drive(0, 0);
-    shoot.shooterTeleop(false, false, false, false, false);
-    climb.Teleop(false, false, false);
+    autonomous.autoPeriodic(m_drive, shoot, climb);
     
   }
 

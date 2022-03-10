@@ -201,21 +201,25 @@ public class DriveTrain {
   }
 
   public void goDistance(double distance){
-
+    
+    double invert = 1;
+    if (distance < 0){
+      invert = -invert;
+    }
     switch(driveState){
       case READY_TO_DRIVE:
-        if (Math.abs(distance) > 0){
-          Double totalDrivetime = (distance/DrivetrainConstants.autoLinearSpeed) * 1000;
+      if (Math.abs(distance) > 0){
+          Double totalDrivetime = (Math.abs(distance)/DrivetrainConstants.autoLinearSpeed) * 1000;
           this.driveStartTime = System.currentTimeMillis();
           this.driveFinishTime = this.driveStartTime + totalDrivetime;
           driveState = DriveMode.DRIVING;
-          this.drive(DrivetrainConstants.autoLinearSpeed, 0);
+          this.drive(invert * DrivetrainConstants.autoLinearSpeed, 0);
         }
         break;
       case DRIVING:
         this.currentTime = System.currentTimeMillis();
         if (currentTime < driveFinishTime){
-          this.drive(DrivetrainConstants.autoLinearSpeed,0);
+          this.drive(invert * DrivetrainConstants.autoLinearSpeed,0);
         }
         else{
           driveStartTime = 0;
