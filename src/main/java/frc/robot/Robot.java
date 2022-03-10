@@ -89,6 +89,7 @@ public class Robot extends TimedRobot {
       m_drive.drive(xSpeed, rot);
     }
 
-    shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_controller.getRawButton(11), m_controller.getRawButton(12), m_controller.getRawButton(10));
+    shoot.shooterTeleop(false, m_controller.getRawButton(2), m_controller.getRawButton(11), m_controller.getRawButton(12), m_controller.getRawButton(10));
+    shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
   }
 }

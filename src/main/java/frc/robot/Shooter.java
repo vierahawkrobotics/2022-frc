@@ -1,5 +1,7 @@
 package frc.robot;
 
+import javax.swing.text.AbstractDocument.BranchElement;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorMatch;
@@ -22,6 +24,13 @@ public class Shooter {
     WPI_TalonSRX backCollector = new WPI_TalonSRX(8);
     private constantVelSpin leftConstantVel = new constantVelSpin(leftSpinnyBoi, false);
     private constantVelSpin rightConstantVel = new constantVelSpin(rightSpinnyBoi, true);
+
+    ShooterState shooterState = ShooterState.DO_NOTHING;
+
+    double moveDownStartTime = 0;
+    double spinUpStartTime = 0;
+    double shoot1StartTime = 0;
+    double shoot2StartTime = 0;
 
     Joystick m_stick = new Joystick(0);
     ColorSensor sensor = new ColorSensor();
@@ -162,18 +171,158 @@ public class Shooter {
     double shootStartTime = 0;
     boolean isTimeRecorded = false;
 
-    public void shooterTeleop(boolean shootButton, boolean seekAimButton, boolean collectButton, boolean ejectButton, boolean manualShootButton) {
-        if (shootButton && !manualShootButton) {
+    public void shootAutomation(boolean shootButton, boolean collectButton, boolean ejectButton) {
+        switch (shooterState) {
+            case DO_NOTHING:
+                rightConstantVel.shoot(false);
+                leftConstantVel.shoot(false);
+                if (!collectButton) {
+                    frontCollector.set(0);
+                    backCollector.set(0);
+                }
+                if (!ejectButton) {
+                    frontCollector.set(0);
+                    backCollector.set(0);
+                }
+                if (shootButton) {
+                    shooterState = ShooterState.MOVE_DOWN;
+                }
+                break;
+
+            case MOVE_DOWN:
+                if (shootButton) {
+                    if (moveDownStartTime == 0) {
+                        moveDownStartTime = System.currentTimeMillis();
+                        frontCollector.set(.1);
+                        backCollector.set(.1);
+                    }
+                    
+                    if (moveDownStartTime + 250 < System.currentTimeMillis()) {
+                        frontCollector.set(.1);
+                        backCollector.set(.1);
+                    }
+
+                    else {
+                        moveDownStartTime = 0;
+                        shooterState = ShooterState.SHOOT_BALL_1;
+                        break;
+                    }
+                } 
+                
+                else {
+                    moveDownStartTime = 0;
+                    shooterState = ShooterState.DO_NOTHING;
+                    break;
+                }
+
+            case SHOOT_BALL_1:
+                if (shootButton) {
+                    if (spinUpStartTime == 0) {
+                        spinUpStartTime = System.currentTimeMillis();
+                        leftConstantVel.shoot(true);
+                        rightConstantVel.shoot(true);
+                    }
+
+                    if (spinUpStartTime + 2000 < System.currentTimeMillis()) {
+                        leftConstantVel.shoot(true);
+                        rightConstantVel.shoot(true);
+                    }
+
+                    if (spinUpStartTime + 2000 > System.currentTimeMillis()) {
+                        leftConstantVel.shoot(true);
+                        rightConstantVel.shoot(true);
+
+                        if (shoot1StartTime == 0) {
+                            shoot1StartTime = System.currentTimeMillis();
+                            frontCollector.set(.7);
+                            backCollector.set(.7);
+                        }
+
+                        if (shoot1StartTime + 250 < System.currentTimeMillis()) {
+                            frontCollector.set(.7);
+                            backCollector.set(.7);
+                        }
+
+                        else {
+                            frontCollector.set(0);
+                            backCollector.set(0);
+                            shoot1StartTime = 0;
+                            spinUpStartTime = 0;
+                            shooterState = ShooterState.SHOOT_BALL_2;
+                            break;
+                        }
+
+                    }
+                }
+
+                else {
+                    shooterState = ShooterState.DO_NOTHING;
+                    break;
+                }
+
+            case SHOOT_BALL_2:
+            if (shootButton) {
+                if (spinUpStartTime == 0) {
+                    spinUpStartTime = System.currentTimeMillis();
+                    leftConstantVel.shoot(true);
+                    rightConstantVel.shoot(true);
+                }
+
+                if (spinUpStartTime + 1000 < System.currentTimeMillis()) {
+                    leftConstantVel.shoot(true);
+                    rightConstantVel.shoot(true);
+                }
+
+                if (spinUpStartTime + 1000 > System.currentTimeMillis()) {
+                    leftConstantVel.shoot(true);
+                    rightConstantVel.shoot(true);
+                    
+                    if (shoot2StartTime == 0) {
+                        shoot2StartTime = System.currentTimeMillis();
+                        frontCollector.set(.7);
+                        backCollector.set(.7);
+                    }
+
+                    if (shoot2StartTime + 500 < System.currentTimeMillis()) {
+                        frontCollector.set(.7);
+                        backCollector.set(.7);
+                    }
+                    
+                    else {
+                        leftConstantVel.shoot(false);
+                        rightConstantVel.shoot(false);
+                        frontCollector.set(0);
+                        backCollector.set(0);
+                        shoot2StartTime = 0;
+                        spinUpStartTime = 0;
+                        shooterState = ShooterState.DO_NOTHING;
+                        break;
+                    }
+
+                }
+            }
+
+            else {
+                shooterState = ShooterState.DO_NOTHING;
+                break;
+            }
+        }
+    }
+
+    public void shooterTeleop(boolean shootButton, boolean seekAimButton, boolean collectButton, boolean ejectButton,
+            boolean manualShootButton) {
+         /* if (shootButton && !manualShootButton) {
             System.out.println("SHOOOOOT");
             // run shoot motors
             leftConstantVel.shoot(true);
             rightConstantVel.shoot(true);
-            //if this is the first loop itteration since the button was pressed, record the current time
+            // if this is the first loop itteration since the button was pressed, record the
+            // current time
             if (!isTimeRecorded) {
                 isTimeRecorded = true;
                 shootStartTime = System.currentTimeMillis();
             }
-            //if three seconds since pushing the button has elapsed, do shootything
+            // if three seconds since pushing the button has elapsed, do shootything
             if (System.currentTimeMillis() >= shootStartTime + 2000) {
                 // move servo to allow balls to move into shooter
                 servoState = ServoState.Open;
@@ -183,26 +332,23 @@ public class Shooter {
                 // System.out.print(leftConstantVel.getEncoder());
                 // System.out.print(rightConstantVel.getEncoder());
                 System.out.println("DISTANCE: " + JoshsLemon.distanceGrab());
-            }
-            else {
-                //keep balls secure untill ready to shoot
+            } else {
+                // keep balls secure untill ready to shoot
                 servoState = ServoState.Close;
             }
-        }
-        else if (manualShootButton) {
-            leftSpinnyBoi.set(1300.0/5000.0);
-            rightSpinnyBoi.set(1300.0/5000.0);
+        } else if (manualShootButton) {
+            leftSpinnyBoi.set(1300.0 / 5000.0);
+            rightSpinnyBoi.set(1300.0 / 5000.0);
 
-        } 
-        else {
+        } else {
             servoState = ServoState.Close;
             rightConstantVel.shoot(false);
             leftConstantVel.shoot(false);
             isTimeRecorded = false;
             shootStartTime = 0;
-        }
+        } */
         if (seekAimButton) {
-            auto.seeking();
+            //auto.seeking();
             auto.Aiming();
         }
         if (collectButton && !shootButton) {
@@ -215,9 +361,9 @@ public class Shooter {
             frontCollector.set(0);
             backCollector.set(0);
         }
-        //make servo do the thing we told it to do
-        UpdateServo();
-        putDash();
+        // make servo do the thing we told it to do
+        //UpdateServo();
+        //putDash();
     }
 }
 
@@ -230,4 +376,11 @@ enum ColorSeen {
     Red,
     Blue,
     Abyss
+}
+
+enum ShooterState {
+    DO_NOTHING,
+    MOVE_DOWN,
+    SHOOT_BALL_1,
+    SHOOT_BALL_2,
 }
