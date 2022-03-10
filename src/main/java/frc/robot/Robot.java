@@ -35,9 +35,12 @@ public class Robot extends TimedRobot {
   double xSpeed;
   double rot;
 
+  public Climb climb = new Climb(9,10);
+
   @Override
   public void robotInit() {
     shoot.shooterInit();
+    climb.Init();
     xSpeed = 0;
     rot = 0;
   }
@@ -88,8 +91,8 @@ public class Robot extends TimedRobot {
     else {
       m_drive.drive(xSpeed, rot);
     }
-
     shoot.shooterTeleop(false, m_controller.getRawButton(2), m_controller.getRawButton(11), m_controller.getRawButton(12), m_controller.getRawButton(10));
     shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
+    climb.Teleop(m_controller.getRawButton(6), m_controller.getRawButton(4), m_controller.getRawButton(5));
   }
 }
