@@ -117,7 +117,7 @@ public class Lemonlight {
      * @return Height of target, 9 feet on game day
      */
     public double getTargetHeight(){
-        double tarHeight = 8*12+9;
+        double tarHeight = 104;
         return tarHeight;
     }
 
