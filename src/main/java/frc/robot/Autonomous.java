@@ -5,6 +5,10 @@ public class Autonomous {
     Lemonlight ParkersLemon = new Lemonlight();
     AutoState autoState = AutoState.doNothing;
     boolean count = true;
+    double startAiming;
+
+    
+
 
     /**
      * 
@@ -30,18 +34,7 @@ public class Autonomous {
      * @return In degress the amount you are adjusting the
      *         robot to line it up with the reflective tape
      */
-    public double Aiming() {
-        double offset = Lemonlight.getHorizontalOffset();
-        double steeringAdjust = 0;
-
-        if (offset >= 1) {
-            steeringAdjust = offset;
-        } else {
-            steeringAdjust = 0;
-        }
-
-        return steeringAdjust;
-    }
+    
 
     /**
      * 
@@ -78,15 +71,16 @@ public class Autonomous {
 
             case moveBack:
                 System.out.println("Move Back");
-                m_drive.goDistance(-2.7432);
+                m_drive.goDistance(-0.305*4);
                 if (m_drive.driveFinishTime > System.currentTimeMillis()) {
-                    m_drive.goDistance(-2.7432);
+                    m_drive.goDistance(-0.305*4);
                 } else {
                     autoState = AutoState.shoot;
                 }
                 break;
 
             case shoot:
+                shoot.Aiming();
                 System.out.println("Shoot");
                 shoot.shooterTeleop(true, false, false, false, false);
                 if (System.currentTimeMillis() <= shoot.shootStartTime + 8000) {

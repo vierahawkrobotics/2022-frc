@@ -19,11 +19,12 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
  */
 public class Robot extends TimedRobot {
   
-  private final Shooter shoot = new Shooter();  
-
+  
   private final XboxController m_xbox = new XboxController(1);
   private final Joystick m_controller = new Joystick(0);
   private final DriveTrain m_drive = new DriveTrain();
+  public Climb climb = new Climb(9,10);
+  private final Shooter shoot = new Shooter( m_drive, climb);  
 
   private final Autonomous autonomous = new Autonomous();
 
@@ -37,7 +38,6 @@ public class Robot extends TimedRobot {
   double xSpeed;
   double rot;
 
-  public Climb climb = new Climb(9,10);
 
   @Override
   public void robotInit() {
@@ -101,7 +101,7 @@ public class Robot extends TimedRobot {
       m_drive.drive(xSpeed, rot);
     }
     shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
-    //shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
+    shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
     climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6));
   }
 

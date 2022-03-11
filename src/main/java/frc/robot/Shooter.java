@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.time.OffsetDateTime;
+
 import javax.swing.text.AbstractDocument.BranchElement;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -31,6 +33,10 @@ public class Shooter {
     double spinUpStartTime = 0;
     double shoot1StartTime = 0;
     double shoot2StartTime = 0;
+
+    DriveTrain m_drive;
+    Shooter shoot;
+    Climb climb;
 
     // Joystick m_stick = new Joystick(0);
     ColorSensor sensor = new ColorSensor();
@@ -79,6 +85,11 @@ public class Shooter {
     /**
      * @return if the ball should move up the conveyor belt or not
      */
+
+    public Shooter(DriveTrain m_drive, Climb climb){
+        this.m_drive = m_drive;
+        this.climb = climb;
+    }
 
     public void shooterInit() {
         m_colorMatcher.addColorMatch(kBlueTarget);
@@ -170,7 +181,7 @@ public class Shooter {
      */
     double shootStartTime = 0;
     boolean isTimeRecorded = false;
-/*
+
     public void shootAutomation(boolean shootButton, boolean collectButton, boolean ejectButton) {
         switch (shooterState) {
             case DO_NOTHING:
@@ -214,16 +225,15 @@ public class Shooter {
                         frontCollector.set(0);
                         backCollector.set(0);
                         shooterState = ShooterState.SHOOT_BALL_1;
-                        break;
                     }
                 }
-
                 else {
                     frontCollector.set(0);
                     backCollector.set(0);
                     shooterState = ShooterState.DO_NOTHING;
                     break;
                 }
+                break;
 
             case SHOOT_BALL_1:
                 System.out.println("Begin SHOOT BALL 1");
@@ -258,16 +268,14 @@ public class Shooter {
                             frontCollector.set(0);
                             backCollector.set(0);
                             shooterState = ShooterState.SHOOT_BALL_2;
-                            break;
                         }
 
                     }
                 }
-
                 else {
                     shooterState = ShooterState.DO_NOTHING;
-                    break;
                 }
+                break;
 
             case SHOOT_BALL_2:
                 System.out.println("Begin SHOOT BALL 2");
@@ -304,21 +312,20 @@ public class Shooter {
                             frontCollector.set(0);
                             backCollector.set(0);
                             shooterState = ShooterState.DO_NOTHING;
-                            break;
                         }
 
                     }
                 }
-
                 else {
                     shooterState = ShooterState.DO_NOTHING;
-                    break;
                 }
+                break;
         }
     }
-*/
+
     public void shooterTeleop(boolean shootButton, boolean seekAimButton, boolean collectButton, boolean ejectButton,
             boolean manualShootButton) {
+/*
         if (shootButton && !manualShootButton) {
             System.out.println("SHOOOOOT");
             // run shoot motors
@@ -354,9 +361,10 @@ public class Shooter {
             leftConstantVel.shoot(false);
             isTimeRecorded = false;
         }
+*/
         if (seekAimButton) {
             // auto.seeking();
-            auto.Aiming();
+            Aiming();
         }
         if (collectButton && !shootButton) {
             frontCollector.set(.9);
@@ -372,6 +380,20 @@ public class Shooter {
         // UpdateServo();
         // putDash();
     }
+
+    public void Aiming() {
+        double offset = Lemonlight.getHorizontalOffset();
+        double steeringAdjust = 0;
+
+        if (Math.abs(offset) >= 3) {
+            steeringAdjust = offset;
+        } else {
+            steeringAdjust = 0;
+        }
+
+        m_drive.gotoAngle(steeringAdjust);
+    }
+
 }
 
 enum ServoState {
