@@ -386,7 +386,7 @@ public class Shooter {
         double steeringAdjust = 0;
 
         if (Math.abs(offset) >= 3) {
-            steeringAdjust = offset;
+            steeringAdjust = -offset;
         } else {
             steeringAdjust = 0;
         }
