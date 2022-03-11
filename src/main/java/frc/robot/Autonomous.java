@@ -80,10 +80,10 @@ public class Autonomous {
                 break;
 
             case shoot:
-                shoot.Aiming();
-                System.out.println("Shoot");
-                shoot.shooterTeleop(true, false, false, false, false);
-                if (System.currentTimeMillis() <= shoot.shootStartTime + 8000) {
+            System.out.println("Shoot");
+            shoot.shooterTeleop(true, false, false, false, false);
+            if (System.currentTimeMillis() <= shoot.shootStartTime + 8000) {
+                    // shoot.Aiming();
                     shoot.shooterTeleop(true, false, false, false, false);
                 } else {
                     autoState = AutoState.doNothing;
