@@ -20,7 +20,9 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 public class Robot extends TimedRobot {
   
   
-  private final XboxController m_xbox = new XboxController(1);
+  //private final XboxController m_xbox = new XboxController(1);
+  private final Joystick m_xbox = new Joystick(1);
+
   private final Joystick m_controller = new Joystick(0);
   private final DriveTrain m_drive = new DriveTrain();
   public Climb climb = new Climb(9,10);
@@ -106,9 +108,9 @@ public class Robot extends TimedRobot {
     else {
       m_drive.drive(xSpeed, rot);
     }
-    shoot.shooterTeleop(false, m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
-    shoot.shootAutomation(m_controller.getRawButton(1), m_xbox.getRawButton(3), m_xbox.getRawButton(2));
-    climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6));
+    shoot.shooterTeleop(false, m_controller.getRawButton(2), m_xbox.getRawButton(1), m_xbox.getRawButton(3), m_xbox.getRawButton(5));
+    shoot.shootAutomation(m_controller.getRawButton(1), m_xbox.getRawButton(4), m_xbox.getRawButton(3));
+    climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(2), m_xbox.getRawButton(6));
 
     shoot.Idle(m_controller.getRawButton(1), false, m_xbox.getRawButton(5), m_controller.getRawButton(11), m_controller.getRawButton(12));
   }

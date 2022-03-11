@@ -100,8 +100,8 @@ public class Shooter {
         leftConstantVel.motorInit();
         rightConstantVel.motorInit();
         JoshsLemon.initTheLemon();
-        frontCollector.setNeutralMode(NeutralMode.Brake);
-        backCollector.setNeutralMode(NeutralMode.Brake);
+        frontCollector.setNeutralMode(NeutralMode.Coast);
+        backCollector.setNeutralMode(NeutralMode.Coast);
     }
 
     // public void moveUp() {
