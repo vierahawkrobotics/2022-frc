@@ -7,7 +7,7 @@ public class Autonomous {
     boolean count = true;
     double startAiming;
 
-    
+    double startTime = 0;
 
 
     /**
@@ -71,19 +71,32 @@ public class Autonomous {
 
             case moveBack:
                 System.out.println("Move Back");
-                m_drive.goDistance(-0.305*4);
+                m_drive.goDistance(-1.2192);
                 if (m_drive.driveFinishTime > System.currentTimeMillis()) {
-                    m_drive.goDistance(-0.305*4);
-                } else {
-                    autoState = AutoState.shoot;
+                    m_drive.goDistance(-1.2192);
+                } 
+                else {
+                    autoState = AutoState.aim;
+                }
+                break;
+
+            case aim:
+                if (startTime == 0){
+                    startAiming = System.currentTimeMillis();
+                    shoot.Aiming();
+                }
+                else if (startTime + 500 > System.currentTimeMillis()){
+                    shoot.Aiming();
+                }
+                else{
+                   autoState = AutoState.shoot; 
                 }
                 break;
 
             case shoot:
-            System.out.println("Shoot");
-            shoot.shooterTeleop(true, false, false, false, false);
-            if (System.currentTimeMillis() <= shoot.shootStartTime + 8000) {
-                    // shoot.Aiming();
+                System.out.println("Shoot");
+                shoot.shooterTeleop(true, false, false, false, false);
+                if (System.currentTimeMillis() <= shoot.shootStartTime + 8000) {
                     shoot.shooterTeleop(true, false, false, false, false);
                 } else {
                     autoState = AutoState.doNothing;
@@ -97,5 +110,6 @@ public class Autonomous {
 enum AutoState {
     doNothing,
     moveBack,
+    aim,
     shoot
 }

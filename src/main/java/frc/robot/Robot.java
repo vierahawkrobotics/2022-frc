@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   public Climb climb = new Climb(9,10);
   private final Shooter shoot = new Shooter( m_drive, climb);  
 
-  private final Autonomous autonomous = new Autonomous();
+  private Autonomous autonomous = new Autonomous();
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private final SlewRateLimiter m_speedLimiter = new SlewRateLimiter(3);
@@ -45,6 +45,12 @@ public class Robot extends TimedRobot {
     climb.Init();
     xSpeed = 0;
     rot = 0;
+  }
+
+  @Override
+  public void autonomousInit(){
+    autonomous.count = true;
+    autonomous.autoState = AutoState.doNothing;
   }
 
   @Override
@@ -103,7 +109,7 @@ public class Robot extends TimedRobot {
     shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
     shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
     climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6));
+
+    shoot.Idle(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
   }
-
-
 }

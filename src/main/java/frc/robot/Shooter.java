@@ -86,7 +86,7 @@ public class Shooter {
      * @return if the ball should move up the conveyor belt or not
      */
 
-    public Shooter(DriveTrain m_drive, Climb climb){
+    public Shooter(DriveTrain m_drive, Climb climb) {
         this.m_drive = m_drive;
         this.climb = climb;
     }
@@ -181,26 +181,32 @@ public class Shooter {
      */
     double shootStartTime = 0;
     boolean isTimeRecorded = false;
+    
+    public void Idle(boolean shootButton, boolean collectButton, boolean ejectButton){
+        if (!shootButton || !collectButton || !ejectButton){
+            frontCollector.set(0);
+            backCollector.set(0);
+            rightConstantVel.shoot(false);
+            leftConstantVel.shoot(false);
+        }
+
+    }
 
     public void shootAutomation(boolean shootButton, boolean collectButton, boolean ejectButton) {
         switch (shooterState) {
             case DO_NOTHING:
                 System.out.println("Begin DO NOTHING");
-                rightConstantVel.shoot(false);
-                leftConstantVel.shoot(false);
+                
                 moveDownStartTime = 0;
                 spinUpStartTime = 0;
                 shoot1StartTime = 0;
                 shoot2StartTime = 0;
-                if (!collectButton) {
-                    frontCollector.set(0);
-                    backCollector.set(0);
-                }
-                if (!ejectButton) {
-                    frontCollector.set(0);
-                    backCollector.set(0);
-                }
+
                 if (shootButton) {
+                    frontCollector.set(0);
+                    backCollector.set(0);
+                    rightConstantVel.shoot(false);
+                    leftConstantVel.shoot(false);
                     shooterState = ShooterState.MOVE_DOWN;
                 }
                 break;
@@ -212,156 +218,163 @@ public class Shooter {
                     leftConstantVel.shoot(false);
                     if (moveDownStartTime == 0) {
                         moveDownStartTime = System.currentTimeMillis();
-                        frontCollector.set(.5);
-                        backCollector.set(.5);
+                        frontCollector.set(-0.2);
+                        backCollector.set(-0.2);
                     }
 
-                    else if (moveDownStartTime + 250 < System.currentTimeMillis()) {
-                        frontCollector.set(.5);
-                        backCollector.set(.5);
+                    else if (moveDownStartTime + 250 >= System.currentTimeMillis()) {
+                        frontCollector.set(-0.2);
+                        backCollector.set(-0.2);
                     }
 
                     else {
                         frontCollector.set(0);
                         backCollector.set(0);
-                        shooterState = ShooterState.SHOOT_BALL_1;
+                        shooterState = ShooterState.SPIN_UP;
                     }
-                }
+                } 
+                
                 else {
                     frontCollector.set(0);
                     backCollector.set(0);
                     shooterState = ShooterState.DO_NOTHING;
-                    break;
                 }
+                break;
+
+            case SPIN_UP:
+                System.out.println("SPIN UP");
+                if (shootButton) {
+                    if (spinUpStartTime == 0) {
+                        spinUpStartTime = System.currentTimeMillis();
+                        leftConstantVel.shoot(true);
+                        rightConstantVel.shoot(true);
+                    }
+
+                    else if (spinUpStartTime + 2000 >= System.currentTimeMillis()) {
+                        leftConstantVel.shoot(true);
+                        rightConstantVel.shoot(true);
+                    }
+                    
+                    else {
+                        shooterState = ShooterState.SHOOT_BALL_1;
+                    }
+                } 
+                else {
+                    leftConstantVel.shoot(false);
+                    rightConstantVel.shoot(false);
+                    shooterState = ShooterState.DO_NOTHING;
+                }
+
                 break;
 
             case SHOOT_BALL_1:
                 System.out.println("Begin SHOOT BALL 1");
                 if (shootButton) {
-                    if (spinUpStartTime == 0) {
-                        spinUpStartTime = System.currentTimeMillis();
-                        leftConstantVel.shoot(true);
-                        rightConstantVel.shoot(true);
+                    leftConstantVel.shoot(true);
+                    rightConstantVel.shoot(true);
+                    if (shoot1StartTime == 0) {
+                        shoot1StartTime = System.currentTimeMillis();
+                        frontCollector.set(0.7);
+                        backCollector.set(0.7);
                     }
 
-                    else if (spinUpStartTime + 2000 < System.currentTimeMillis()) {
-                        leftConstantVel.shoot(true);
-                        rightConstantVel.shoot(true);
+                    else if (shoot1StartTime + 250 >= System.currentTimeMillis()) {
+                        frontCollector.set(0.7);
+                        backCollector.set(0.7);
                     }
 
                     else {
-                        leftConstantVel.shoot(true);
-                        rightConstantVel.shoot(true);
-
-                        if (shoot1StartTime == 0) {
-                            shoot1StartTime = System.currentTimeMillis();
-                            frontCollector.set(.7);
-                            backCollector.set(.7);
-                        }
-
-                        else if (shoot1StartTime + 250 < System.currentTimeMillis()) {
-                            frontCollector.set(.7);
-                            backCollector.set(.7);
-                        }
-
-                        else {
-                            frontCollector.set(0);
-                            backCollector.set(0);
-                            shooterState = ShooterState.SHOOT_BALL_2;
-                        }
-
+                        frontCollector.set(0);
+                        backCollector.set(0);
+                        shooterState = ShooterState.SHOOT_BALL_2;
                     }
-                }
+                    
+                } 
                 else {
+                    frontCollector.set(0);
+                    backCollector.set(0);
+                    leftConstantVel.shoot(false);
+                    rightConstantVel.shoot(false);
                     shooterState = ShooterState.DO_NOTHING;
                 }
                 break;
-
-            case SHOOT_BALL_2:
+                
+                case SHOOT_BALL_2:
                 System.out.println("Begin SHOOT BALL 2");
                 if (shootButton) {
-                    if (spinUpStartTime == 0) {
-                        spinUpStartTime = System.currentTimeMillis();
-                        leftConstantVel.shoot(true);
-                        rightConstantVel.shoot(true);
+                    leftConstantVel.shoot(true);
+                    rightConstantVel.shoot(true);
+                    if (shoot2StartTime == 0) {
+                        shoot2StartTime = System.currentTimeMillis();
+                        frontCollector.set(0.7);
+                        backCollector.set(0.7);
                     }
-
-                    else if (spinUpStartTime + 1000 < System.currentTimeMillis()) {
-                        leftConstantVel.shoot(true);
-                        rightConstantVel.shoot(true);
+                    
+                    else if (shoot2StartTime + 1000 > System.currentTimeMillis()) {
+                        frontCollector.set(0.7);
+                        backCollector.set(0.7);
                     }
-
+                    
                     else {
-                        leftConstantVel.shoot(true);
-                        rightConstantVel.shoot(true);
-
-                        if (shoot2StartTime == 0) {
-                            shoot2StartTime = System.currentTimeMillis();
-                            frontCollector.set(.7);
-                            backCollector.set(.7);
-                        }
-
-                        else if (shoot2StartTime + 500 < System.currentTimeMillis()) {
-                            frontCollector.set(.7);
-                            backCollector.set(.7);
-                        }
-
-                        else {
-                            leftConstantVel.shoot(false);
-                            rightConstantVel.shoot(false);
-                            frontCollector.set(0);
-                            backCollector.set(0);
-                            shooterState = ShooterState.DO_NOTHING;
-                        }
-
+                        frontCollector.set(0);
+                        backCollector.set(0);
+                        leftConstantVel.shoot(false);
+                        rightConstantVel.shoot(false);
+                        shooterState = ShooterState.DO_NOTHING;
                     }
-                }
+                    
+                } 
                 else {
+                    frontCollector.set(0);
+                    backCollector.set(0);
+                    leftConstantVel.shoot(false);
+                    rightConstantVel.shoot(false);
                     shooterState = ShooterState.DO_NOTHING;
                 }
                 break;
+            }
         }
-    }
-
+        
     public void shooterTeleop(boolean shootButton, boolean seekAimButton, boolean collectButton, boolean ejectButton,
             boolean manualShootButton) {
-/*
-        if (shootButton && !manualShootButton) {
-            System.out.println("SHOOOOOT");
-            // run shoot motors
-            leftConstantVel.shoot(true);
-            rightConstantVel.shoot(true);
-            // if this is the first loop itteration since the button was pressed, record the
-            // current time
-            if (!isTimeRecorded) {
-                isTimeRecorded = true;
-                shootStartTime = System.currentTimeMillis();
-            }
-            // if three seconds since pushing the button has elapsed, do shootything
-            if (System.currentTimeMillis() >= shootStartTime + 2000) {
-                // move servo to allow balls to move into shooter
-                servoState = ServoState.Open;
-                // run collector motors
-                frontCollector.set(.9);
-                backCollector.set(.9);
-                // System.out.print(leftConstantVel.getEncoder());
-                // System.out.print(rightConstantVel.getEncoder());
-                System.out.println("DISTANCE: " + JoshsLemon.distanceGrab());
-            } else {
-                // keep balls secure untill ready to shoot
-                servoState = ServoState.Close;
-            }
-        } else if (manualShootButton) {
-            leftSpinnyBoi.set(1300.0 / 5000.0);
-            rightSpinnyBoi.set(1300.0 / 5000.0);
-
-        } else {
-            servoState = ServoState.Close;
-            rightConstantVel.shoot(false);
-            leftConstantVel.shoot(false);
-            isTimeRecorded = false;
-        }
-*/
+        /*
+         * if (shootButton && !manualShootButton) {
+         * System.out.println("SHOOOOOT");
+         * // run shoot motors
+         * leftConstantVel.shoot(true);
+         * rightConstantVel.shoot(true);
+         * // if this is the first loop itteration since the button was pressed, record
+         * the
+         * // current time
+         * if (!isTimeRecorded) {
+         * isTimeRecorded = true;
+         * shootStartTime = System.currentTimeMillis();
+         * }
+         * // if three seconds since pushing the button has elapsed, do shootything
+         * if (System.currentTimeMillis() >= shootStartTime + 2000) {
+         * // move servo to allow balls to move into shooter
+         * servoState = ServoState.Open;
+         * // run collector motors
+         * frontCollector.set(.9);
+         * backCollector.set(.9);
+         * // System.out.print(leftConstantVel.getEncoder());
+         * // System.out.print(rightConstantVel.getEncoder());
+         * System.out.println("DISTANCE: " + JoshsLemon.distanceGrab());
+         * } else {
+         * // keep balls secure untill ready to shoot
+         * servoState = ServoState.Close;
+         * }
+         * } else if (manualShootButton) {
+         * leftSpinnyBoi.set(1300.0 / 5000.0);
+         * rightSpinnyBoi.set(1300.0 / 5000.0);
+         * 
+         * } else {
+         * servoState = ServoState.Close;
+         * rightConstantVel.shoot(false);
+         * leftConstantVel.shoot(false);
+         * isTimeRecorded = false;
+         * }
+         */
         if (seekAimButton) {
             // auto.seeking();
             Aiming();
@@ -410,6 +423,7 @@ enum ColorSeen {
 enum ShooterState {
     DO_NOTHING,
     MOVE_DOWN,
+    SPIN_UP,
     SHOOT_BALL_1,
     SHOOT_BALL_2,
 }
