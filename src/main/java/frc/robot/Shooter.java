@@ -182,8 +182,8 @@ public class Shooter {
     double shootStartTime = 0;
     boolean isTimeRecorded = false;
 
-    public void Idle(boolean shootButton, boolean collectButton, boolean ejectButton) {
-        if (!shootButton) {
+    public void Idle(boolean manualShootButton, boolean oneBallShootButton, boolean twoBallShootButton, boolean collectButton, boolean ejectButton) {
+        if (!(manualShootButton || oneBallShootButton || twoBallShootButton)) {
             rightConstantVel.shoot(false);
             leftConstantVel.shoot(false);
 

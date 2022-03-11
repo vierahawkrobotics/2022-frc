@@ -106,10 +106,10 @@ public class Robot extends TimedRobot {
     else {
       m_drive.drive(xSpeed, rot);
     }
-    shoot.shooterTeleop(m_controller.getRawButton(9), m_controller.getRawButton(2), m_controller.getRawButton(11), m_controller.getRawButton(12), m_xbox.getRawButton(5));
-    shoot.shootAutomation(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
+    shoot.shooterTeleop(false, m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
+    shoot.shootAutomation(m_controller.getRawButton(1), m_xbox.getRawButton(3), m_xbox.getRawButton(2));
     climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6));
 
-    shoot.Idle(m_controller.getRawButton(1), m_controller.getRawButton(11), m_controller.getRawButton(12));
+    shoot.Idle(m_controller.getRawButton(1), false, m_xbox.getRawButton(5), m_controller.getRawButton(11), m_controller.getRawButton(12));
   }
 }
