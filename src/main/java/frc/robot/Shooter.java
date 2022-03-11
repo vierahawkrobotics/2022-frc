@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.wpilibj.util.Color;
 
 public class Shooter {
@@ -99,6 +100,8 @@ public class Shooter {
         leftConstantVel.motorInit();
         rightConstantVel.motorInit();
         JoshsLemon.initTheLemon();
+        frontCollector.setNeutralMode(NeutralMode.Brake);
+        backCollector.setNeutralMode(NeutralMode.Brake);
     }
 
     // public void moveUp() {
@@ -276,13 +279,13 @@ public class Shooter {
                     rightConstantVel.shoot(true);
                     if (shoot1StartTime == 0) {
                         shoot1StartTime = System.currentTimeMillis();
-                        frontCollector.set(0.9);
-                        backCollector.set(0.9);
+                        frontCollector.set(0.1);
+                        backCollector.set(0.1);
                     }
 
-                    else if (shoot1StartTime + 50 >= System.currentTimeMillis()) {
-                        frontCollector.set(0.9);
-                        backCollector.set(0.9);
+                    else if (shoot1StartTime + 250 >= System.currentTimeMillis()) {
+                        frontCollector.set(0.1);
+                        backCollector.set(0.1);
                     }
 
                     else {
@@ -369,8 +372,6 @@ public class Shooter {
 
         } else {
             servoState = ServoState.Close;
-            rightConstantVel.shoot(false);
-            leftConstantVel.shoot(false);
             isTimeRecorded = false;
         }
 

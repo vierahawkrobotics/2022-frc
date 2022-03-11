@@ -1,6 +1,7 @@
 package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class Climb {
     public WPI_TalonSRX left;
@@ -10,11 +11,14 @@ public class Climb {
         right = new WPI_TalonSRX(rightIndex);
         left = new WPI_TalonSRX(leftIndex);
     }
-
+    
     public void Init() {
+        
         right.configFactoryDefault();
         left.configFactoryDefault();
-
+        
+        right.setNeutralMode(NeutralMode.Brake);
+        left.setNeutralMode(NeutralMode.Brake);
         left.setInverted(true);
         left.follow(right);
     }
