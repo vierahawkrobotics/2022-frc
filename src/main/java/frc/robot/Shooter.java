@@ -225,7 +225,7 @@ public class Shooter {
                         backCollector.set(-0.2);
                     }
 
-                    else if (moveDownStartTime + 500 >= System.currentTimeMillis()) {
+                    else if (moveDownStartTime + 750 >= System.currentTimeMillis()) {
                         frontCollector.set(-0.2);
                         backCollector.set(-0.2);
                     }
@@ -276,13 +276,13 @@ public class Shooter {
                     rightConstantVel.shoot(true);
                     if (shoot1StartTime == 0) {
                         shoot1StartTime = System.currentTimeMillis();
-                        frontCollector.set(0.7);
-                        backCollector.set(0.7);
+                        frontCollector.set(0.9);
+                        backCollector.set(0.9);
                     }
 
-                    else if (shoot1StartTime + 250 >= System.currentTimeMillis()) {
-                        frontCollector.set(0.7);
-                        backCollector.set(0.7);
+                    else if (shoot1StartTime + 50 >= System.currentTimeMillis()) {
+                        frontCollector.set(0.9);
+                        backCollector.set(0.9);
                     }
 
                     else {
