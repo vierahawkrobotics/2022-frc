@@ -7,7 +7,8 @@ public class Autonomous {
     boolean count = true;
     double startAiming;
 
-    double startTime = 0;
+    double aimStartTime = 0;
+    double shootStartTime = 0;
 
 
     /**
@@ -60,6 +61,10 @@ public class Autonomous {
         climb.Teleop(false, false, false);
         switch (autoState) {
             case doNothing:
+                shootStartTime = 0;
+                aimStartTime = 0;
+                shoot.backCollector.set(0);
+                shoot.frontCollector.set(0);
                 System.out.println("Do Nothing");
                 m_drive.drive(0, 0);
                 shoot.shooterTeleop(false, false, false, false, false);
@@ -81,11 +86,11 @@ public class Autonomous {
                 break;
 
             case aim:
-                if (startTime == 0){
-                    startAiming = System.currentTimeMillis();
+                if (aimStartTime == 0){
+                    aimStartTime = System.currentTimeMillis();
                     shoot.Aiming();
                 }
-                else if (startTime + 500 > System.currentTimeMillis()){
+                else if (aimStartTime + 3000 > System.currentTimeMillis()){
                     shoot.Aiming();
                 }
                 else{
@@ -96,10 +101,17 @@ public class Autonomous {
             case shoot:
                 System.out.println("Shoot");
                 shoot.shooterTeleop(true, false, false, false, false);
-                if (System.currentTimeMillis() <= shoot.shootStartTime + 8000) {
+                if (shootStartTime == 0){
+                    shootStartTime = System.currentTimeMillis();
                     shoot.shooterTeleop(true, false, false, false, false);
-                } else {
+                }
+                else if (System.currentTimeMillis() <= shootStartTime + 8000) {
+                    shoot.shooterTeleop(true, false, false, false, false);
+                } 
+                else {
                     autoState = AutoState.doNothing;
+                    shoot.backCollector.set(0);
+                    shoot.frontCollector.set(0);
                 }
                 break;
         }
