@@ -76,9 +76,9 @@ public class Autonomous {
 
             case moveBack:
                 System.out.println("Move Back");
-                m_drive.goDistance(-1.2192);
+                m_drive.goDistance(-1.68);
                 if (m_drive.driveFinishTime > System.currentTimeMillis()) {
-                    m_drive.goDistance(-1.2192);
+                    m_drive.goDistance(-1.68);
                 } 
                 else {
                     autoState = AutoState.aim;
