@@ -279,13 +279,13 @@ public class Shooter {
                     rightConstantVel.shoot(true);
                     if (shoot1StartTime == 0) {
                         shoot1StartTime = System.currentTimeMillis();
-                        frontCollector.set(0.1);
-                        backCollector.set(0.1);
+                        frontCollector.set(0.4);
+                        backCollector.set(0.3);
                     }
 
                     else if (shoot1StartTime + 250 >= System.currentTimeMillis()) {
-                        frontCollector.set(0.1);
-                        backCollector.set(0.1);
+                        frontCollector.set(0.4);
+                        backCollector.set(0.3);
                     }
 
                     else {
@@ -294,7 +294,8 @@ public class Shooter {
                         shooterState = ShooterState.SHOOT_BALL_2;
                     }
 
-                } else {
+                } 
+                else {
                     frontCollector.set(0);
                     backCollector.set(0);
                     leftConstantVel.shoot(false);
@@ -310,13 +311,13 @@ public class Shooter {
                     rightConstantVel.shoot(true);
                     if (shoot2StartTime == 0) {
                         shoot2StartTime = System.currentTimeMillis();
-                        frontCollector.set(0.7);
-                        backCollector.set(0.7);
+                        frontCollector.set(0.4);
+                        backCollector.set(0.3);
                     }
 
                     else if (shoot2StartTime + 1000 > System.currentTimeMillis()) {
-                        frontCollector.set(0.7);
-                        backCollector.set(0.7);
+                        frontCollector.set(0.4);
+                        backCollector.set(0.3);
                     }
 
                     else {
@@ -397,6 +398,7 @@ public class Shooter {
     public void Aiming() {
         double offset = Lemonlight.getHorizontalOffset();
         double steeringAdjust = 0;
+        double kp = .1;
 
         if (Math.abs(offset) >= 3) {
             steeringAdjust = -offset;
