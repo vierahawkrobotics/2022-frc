@@ -256,7 +256,7 @@ public class Shooter {
                         rightConstantVel.shoot(true);
                     }
 
-                    else if (spinUpStartTime + 2000 >= System.currentTimeMillis()) {
+                    else if (spinUpStartTime + 1250 >= System.currentTimeMillis()) {
                         leftConstantVel.shoot(true);
                         rightConstantVel.shoot(true);
                     }
