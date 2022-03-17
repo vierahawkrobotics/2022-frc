@@ -12,6 +12,6 @@ public class DrivetrainConstants {
     public static final double kWheelRadius = 0.0762; // meters 3 inches
     public static final int kEncoderResolution = 2048;
 
-    public static final double autoTurnSpeed = Math.PI;
+    public static final double autoTurnSpeed = .75*Math.PI;
     public static final double autoLinearSpeed = 1;     
 }

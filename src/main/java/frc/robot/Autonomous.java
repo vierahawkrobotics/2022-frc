@@ -58,7 +58,7 @@ public class Autonomous {
 
     public void autoPeriodic(DriveTrain m_drive, Shooter shoot, Climb climb) {
 
-        climb.Teleop(false, false, false);
+        climb.Teleop(false, false, false,false,false,false,false);
         switch (autoState) {
             case doNothing:
                 shootStartTime = 0;

@@ -128,7 +128,7 @@ public class Lemonlight {
         // double h = getTargetHeight()-getMountedHeight();
         // double r = distanceGrab();
         // double theta = Math.atan((4*h/r));
-        double theta = 74;
+        double theta = 75;
         return theta; //degrees
     }
 
@@ -156,15 +156,20 @@ public class Lemonlight {
         //target height - camera height
         double distance = 0;
         double heightOffset = getTargetHeight()-getMountedHeight();
-        double staticDistance = 125;
-        double readAngle = -3.09;
+        double staticDistance = 93;
+        double readAngle = .44;
 
         double offset = GetDegreeOffset(staticDistance, heightOffset, readAngle);
 
         double angle = Lemonlight.getVertOffset();// this in degrees
 
         distance = (heightOffset)/((Math.tan((angle+offset) / 180 * Math.PI)));
-        return distance+24;
+        distance = distance+24;
+        System.out.println("distance:" +distance);
+        if(distance<120){
+            distance=distance*.5;
+        }
+        return distance;
     }
     
     // public double doubleDistance(){

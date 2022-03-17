@@ -27,7 +27,7 @@ public class DriveTrain {
   /** Sets the max linear speed(m/s) of the robot*/
   public static final double kMaxSpeed = 3.0; // meters per second
   /**Sets the max angular speed of the robot (m/s) */  
-  public static final double kMaxAngularSpeed = 2 * Math.PI; // one rotation per second
+  public static final double kMaxAngularSpeed = 4 * Math.PI; // one rotation per second
 
   /**Sets the distance between the two wheels */
   private static final double kTrackWidth = 0.5799666582; // meters 22.833333 inches 
@@ -140,7 +140,7 @@ public class DriveTrain {
     
     double finish = System.currentTimeMillis();
 
-    System.out.println((finish - this.start)/(1000.0) + "   "  + -getLeftRate() + "   " +  getRightRate() + "   " + speeds.leftMetersPerSecond);
+    // System.out.println((finish - this.start)/(1000.0) + "   "  + -getLeftRate() + "   " +  getRightRate() + "   " + speeds.leftMetersPerSecond);
     
     m_leftGroup.setVoltage(leftOutput + leftFeedforward);
     m_rightGroup.setVoltage(rightOutput + rightFeedforward);

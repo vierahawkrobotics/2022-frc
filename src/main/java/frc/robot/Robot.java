@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
 
   private final Joystick m_controller = new Joystick(0);
   private final DriveTrain m_drive = new DriveTrain();
-  public Climb climb = new Climb(9,10);
+  public Climb climb = new Climb(9,10,11,12); // need to add actual values 
   private final Shooter shoot = new Shooter( m_drive, climb);  
 
   private Autonomous autonomous = new Autonomous();
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     //REMOVE THIS TESTING ONLY
-    System.out.println(shoot.putDash());
+    //System.out.println(shoot.putDash());
     // driveTrain.goToAngle(25);
     // We need to invert one side of the drivetrain so that positive voltages
     // result in both sides moving forward. Depending on how your robot's
@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     // the right by default.
     // var xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * 0;
     // var rot = -m_rotLimiter.calculate(m_controller.getZ()) * 0;
-    System.out.println("Teleop");
+    //System.out.println("Teleop");
     if ((Math.abs(m_controller.getY()) > 0.2)) {
       xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * DrivetrainConstants.kMaxSpeed;
     } else {
@@ -108,9 +108,10 @@ public class Robot extends TimedRobot {
     else {
       m_drive.drive(xSpeed, rot);
     }
+    shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
     // shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
-    shoot.shootAutomation(m_controller.getRawButton(1), m_xbox.getRawButton(4), m_xbox.getRawButton(3));
-    climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6));
+    // shoot.shootAutomation(m_controller.getRawButton(1), m_xbox.getRawButton(4), m_xbox.getRawButton(3));
+    climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6),false,false,false,false);
 
     shoot.Idle(m_xbox.getRawButton(5), m_controller.getRawButton(1),  false, m_xbox.getRawButton(3),m_xbox.getRawButton(2));
   }

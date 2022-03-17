@@ -185,7 +185,8 @@ public class Shooter {
     double shootStartTime = 0;
     boolean isTimeRecorded = false;
 
-    public void Idle(boolean manualShootButton, boolean oneBallShootButton, boolean twoBallShootButton, boolean collectButton, boolean ejectButton) {
+    public void Idle(boolean manualShootButton, boolean oneBallShootButton, boolean twoBallShootButton,
+            boolean collectButton, boolean ejectButton) {
         if (!(manualShootButton || oneBallShootButton || twoBallShootButton)) {
             rightConstantVel.shoot(false);
             leftConstantVel.shoot(false);
@@ -294,8 +295,7 @@ public class Shooter {
                         shooterState = ShooterState.SHOOT_BALL_2;
                     }
 
-                } 
-                else {
+                } else {
                     frontCollector.set(0);
                     backCollector.set(0);
                     leftConstantVel.shoot(false);
@@ -339,6 +339,7 @@ public class Shooter {
         }
     }
 
+
     public void shooterTeleop(boolean shootButton, boolean seekAimButton, boolean collectButton, boolean ejectButton,
             boolean manualShootButton) {
 
@@ -354,7 +355,7 @@ public class Shooter {
                 shootStartTime = System.currentTimeMillis();
             }
             // if three seconds since pushing the button has elapsed, do shootything
-            if (System.currentTimeMillis() >= shootStartTime + 2000) {
+            if (System.currentTimeMillis() >= shootStartTime + 1250) {
                 // move servo to allow balls to move into shooter
                 servoState = ServoState.Open;
                 // run collector motors
@@ -381,11 +382,11 @@ public class Shooter {
             Aiming();
         }
         if (collectButton && !shootButton) {
-            frontCollector.set(.9);
-            backCollector.set(.9);
+            frontCollector.set(.7);
+            backCollector.set(.7);
         } else if (ejectButton && !shootButton) {
-            frontCollector.set(-.9);
-            backCollector.set(-.9);
+            frontCollector.set(-.7);
+            backCollector.set(-.7);
         } else if (!shootButton) {
             // frontCollector.set(0);
             // backCollector.set(0);
@@ -398,16 +399,99 @@ public class Shooter {
     public void Aiming() {
         double offset = Lemonlight.getHorizontalOffset();
         double steeringAdjust = 0;
-        double kp = .1;
+        double kp = 1;
 
         if (Math.abs(offset) >= 3) {
-            steeringAdjust = -offset;
-        } 
-        else {
+            steeringAdjust = -offset * kp;
+        } else {
             steeringAdjust = 0;
         }
 
         m_drive.gotoAngle(steeringAdjust);
+    }
+
+    public void AimingRit() {
+        double offset = Lemonlight.getHorizontalOffset();
+        double steeringAdjust = 0;
+        double minCom = .05;
+        double kp = .1;
+
+        if (Math.abs(offset) >= 1) {
+            steeringAdjust = -offset * kp + minCom;
+        } else {
+            steeringAdjust = kp*-offset-minCom;
+        }
+
+        m_drive.gotoAngle(steeringAdjust);
+    }
+
+
+
+    public void shooterTeleop2(boolean shootButton, boolean seekAimButton, boolean collectButton, boolean ejectButton,
+            boolean manualShootButton) {
+
+        if (shootButton && !manualShootButton) {
+            System.out.println("SHOOOOOT");
+            // run shoot motors
+            leftConstantVel.shoot(true);
+            rightConstantVel.shoot(true);
+            // if this is the first loop itteration since the button was pressed, record
+            // the current time
+            if (!isTimeRecorded) {
+                isTimeRecorded = true;
+                shootStartTime = System.currentTimeMillis();
+            }
+            // if three seconds since pushing the button has elapsed, do shootything
+            if (System.currentTimeMillis() >= shootStartTime + 1250) {
+                // move servo to allow balls to move into shooter
+                servoState = ServoState.Open;
+                // run collector motors
+                
+                if ((System.currentTimeMillis() >= shootStartTime + 1250) && (System.currentTimeMillis() <= shootStartTime + 1750)){
+                    frontCollector.set(0.9);
+                    backCollector.set(0.9);
+                }
+                else if ((System.currentTimeMillis() >= shootStartTime + 1750) && (System.currentTimeMillis() <= shootStartTime + 2000)){
+                    frontCollector.set(0);
+                    backCollector.set(0);
+                }
+                else{
+                    frontCollector.set(.9);
+                    backCollector.set(.9);
+                }
+                // System.out.print(leftConstantVel.getEncoder());
+                // System.out.print(rightConstantVel.getEncoder());
+                System.out.println("DISTANCE: " + JoshsLemon.distanceGrab());
+            } else {
+                // keep balls secure untill ready to shoot
+                servoState = ServoState.Close;
+            }
+        } else if (manualShootButton) {
+            leftSpinnyBoi.set(1300.0 / 5000.0);
+            rightSpinnyBoi.set(1300.0 / 5000.0);
+
+        } else {
+            servoState = ServoState.Close;
+            isTimeRecorded = false;
+        }
+
+        if (seekAimButton) {
+            // auto.seeking();
+            Aiming();
+        }
+        if (collectButton && !shootButton) {
+            frontCollector.set(.7);
+            backCollector.set(.7);
+        } else if (ejectButton && !shootButton) {
+            frontCollector.set(-.7);
+            backCollector.set(-.7);
+        } else if (!shootButton) {
+            // frontCollector.set(0);
+            // backCollector.set(0);
+        }
+        // make servo do the thing we told it to do
+        // UpdateServo();
+        // putDash();
     }
 
 }

@@ -15,6 +15,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 
 /**
  * This is a demo program showing the use of the RobotDrive class, specifically
@@ -27,6 +28,7 @@ public class constantVelSpin {
   public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxRPM;
   private boolean invert;
   Lemonlight ElisLemons = new Lemonlight();
+  private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(0.069633,0.067054,0.0060954);
 
   public constantVelSpin(CANSparkMax curMotor, boolean curInvert) {
     m_motor = curMotor;
@@ -86,14 +88,15 @@ public class constantVelSpin {
     m_encoder = m_motor.getEncoder();
     ElisLemons.initTheLemon();
     // PID coefficients
-    kP = 0; // 6e-5;
+    kP = 1.2292E-05; // 6e-5;
     kI = 0;
     kD = 0;
     kIz = 0;
-    kFF = 0.000015;
+    kFF = 0;
     kMaxOutput = 1;
     kMinOutput = -1;
-    maxRPM = 5000;
+    maxRPM = 5700;
+    
 
     // set PID coefficients7
     m_pidController.setP(kP);
@@ -163,13 +166,19 @@ public class constantVelSpin {
       }
 
       // double setPoint = VtoRPM();
-      double setPoint = VtoRPM() / 5000;
+      double setPoint = VtoRPM() / 5700;
       if (invert) {
         setPoint = -setPoint;
       }
       m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+      double feed = m_feedforward.calculate(setPoint);
+      // m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity, 0, feed);
+
       // this is just to make stuff spin
-      m_motor.set(setPoint);
+
+      m_motor.set(setPoint + feed);
+      // m_motor.set(setPoint);
+      System.out.println("RPM: "+ setPoint);
 
       // this is just to integrate limelight with it
       // m_motor.set(VtoRPM());
@@ -181,7 +190,7 @@ public class constantVelSpin {
 
     } 
     else {
-      System.out.println("NO SHOOT NO SHOOT");
+      // System.out.println("NO SHOOT NO SHOOT");
       m_motor.stopMotor();
     }
   }
