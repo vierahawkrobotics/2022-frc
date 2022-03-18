@@ -369,8 +369,8 @@ public class Shooter {
                 servoState = ServoState.Close;
             }
         } else if (manualShootButton) {
-            leftSpinnyBoi.set(1300.0 / 5000.0);
-            rightSpinnyBoi.set(1300.0 / 5000.0);
+            leftSpinnyBoi.set(1445.0 / 5700.0);
+            rightSpinnyBoi.set(1445.0 / 5700.0);
 
         } else {
             servoState = ServoState.Close;

@@ -81,12 +81,12 @@ public class Robot extends TimedRobot {
     // var xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * 0;
     // var rot = -m_rotLimiter.calculate(m_controller.getZ()) * 0;
     //System.out.println("Teleop");
-    if ((Math.abs(m_controller.getY()) > 0.2)) {
+    if ((Math.abs(m_controller.getY()) > 0.15)) {
       xSpeed = -m_speedLimiter.calculate(m_controller.getY()) * DrivetrainConstants.kMaxSpeed;
     } else {
       xSpeed = 0;
     }
-    if ((Math.abs(m_controller.getZ()) > 0.2)) {
+    if ((Math.abs(m_controller.getZ()) > 0.15)) {
       rot = -m_rotLimiter.calculate(m_controller.getZ()) * DrivetrainConstants.kMaxAngularSpeed;
     }
     else {
