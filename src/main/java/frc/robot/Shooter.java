@@ -256,7 +256,7 @@ public class Shooter {
                         rightConstantVel.shoot(true);
                     }
 
-                    else if (spinUpStartTime + 1250 >= System.currentTimeMillis()) {
+                    else if (spinUpStartTime + 1500 >= System.currentTimeMillis()) {
                         leftConstantVel.shoot(true);
                         rightConstantVel.shoot(true);
                     }
@@ -367,8 +367,8 @@ public class Shooter {
                 servoState = ServoState.Close;
             }
         } else if (manualShootButton) {
-            leftSpinnyBoi.set(1300.0 / 5000.0);
-            rightSpinnyBoi.set(1300.0 / 5000.0);
+            leftSpinnyBoi.set(1455.0 / 5000.0);
+            rightSpinnyBoi.set(1455.0 / 5000.0);
 
         } else {
             servoState = ServoState.Close;
