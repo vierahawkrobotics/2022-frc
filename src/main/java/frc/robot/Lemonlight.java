@@ -171,10 +171,9 @@ public class Lemonlight {
         }
         return distance;
     }
+}
     
-    // public double doubleDistance(){
-    //     return 2*distanceGrab();
-    // }
+   
      /**
      * @return double True distance to reflective tape, hypotenuse of horizonatal distance and vertical distance
      */
