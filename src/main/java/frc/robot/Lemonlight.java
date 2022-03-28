@@ -87,6 +87,7 @@ public class Lemonlight {
      * @return mounting angle of Limelight
     */
     public static double getMountingAngle(){
+        //-10
         double mountingAngle = -10;
         return mountingAngle;
     }
@@ -109,6 +110,7 @@ public class Lemonlight {
      * @return height of limelight on robot to floor
      */
     public double getMountedHeight(){
+        //mountHeight = 26;
         double mountHeight = 26;
         return mountHeight;
     }
