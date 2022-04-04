@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.Shooter;
 
 public class Lemonlight {
 
@@ -22,7 +23,10 @@ public class Lemonlight {
     static NetworkTableEntry ta = table.getEntry("ta");
     private static NetworkTable m_table;
     private String m_tableName = "limelight";
+    DriveTrain m_drive;
+    Climb climb;
 
+    private final Shooter shoot = new Shooter(m_drive, climb);
      /**
      * read values periodically
      */
@@ -167,6 +171,22 @@ public class Lemonlight {
 
         distance = (heightOffset)/((Math.tan((angle+offset) / 180 * Math.PI)));
         return distance+24;
+    }
+
+    public double aimingRit(){
+        double offset = Lemonlight.getHorizontalOffset();
+        double steeringAdjust = 0;
+        double kp = -.1;
+        double min_command = .05;
+
+        if (Math.abs(offset) >= 1) {
+            steeringAdjust = -offset*kp-min_command;
+        } 
+        else if (Math.abs(offset) < 1) {
+            steeringAdjust = -offset*kp+min_command;
+        }
+
+        return steeringAdjust;
     }
     
     // public double doubleDistance(){
