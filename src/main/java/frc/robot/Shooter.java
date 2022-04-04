@@ -99,7 +99,7 @@ public class Shooter {
         m_colorMatcher.addColorMatch(kYellowTarget);
         leftConstantVel.motorInit();
         rightConstantVel.motorInit();
-        JoshsLemon.initTheLemon();
+        //JoshsLemon.initTheLemon();
         frontCollector.setNeutralMode(NeutralMode.Coast);
         backCollector.setNeutralMode(NeutralMode.Coast);
     }
