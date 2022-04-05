@@ -86,14 +86,14 @@ public class constantVelSpin {
     m_encoder = m_motor.getEncoder();
     ElisLemons.initTheLemon();
     // PID coefficients
-    kP = 0; // 6e-5;
+    kP = 6e-5; // 6e-5;
     kI = 0;
     kD = 0;
     kIz = 0;
     kFF = 0.000015;
     kMaxOutput = 1;
     kMinOutput = -1;
-    maxRPM = 5000;
+    maxRPM = 5700;
 
     // set PID coefficients7
     m_pidController.setP(kP);
@@ -163,11 +163,12 @@ public class constantVelSpin {
       }
 
       // double setPoint = VtoRPM();
-      double setPoint = VtoRPM() / 5000;
+      double setPoint = VtoRPM() / 5700;
       if (invert) {
         setPoint = -setPoint;
       }
-      m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+      //changes to voltage, not kvelocity, as setpoint is already divided by 5700
+      m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVoltage);
       // this is just to make stuff spin
       m_motor.set(setPoint);
 
