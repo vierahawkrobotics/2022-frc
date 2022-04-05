@@ -173,20 +173,21 @@ public class Lemonlight {
         return distance+24;
     }
 
-    public double aimingRit(double tx){
-        double offset = tx;
+    public void aimingRit(double tx){
+        double offset = Lemonlight.getHorizontalOffset();
         double steeringAdjust = 0;
-        double kp = -.1;
-        double min_command = .05;
+        double kP = .1;
+        double kI = 0;
+        double kD = 0;
 
         if (Math.abs(offset) >= 1) {
-            steeringAdjust = -offset*kp-min_command;
+            steeringAdjust = -offset*kP;
         } 
-        else if (Math.abs(offset) < 1) {
-            steeringAdjust = -offset*kp+min_command;
+        else {
+            steeringAdjust = 0;
         }
 
-        return steeringAdjust;
+        m_drive.gotoAngle(steeringAdjust);;
     }
     
     // public double doubleDistance(){
