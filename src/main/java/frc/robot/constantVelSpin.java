@@ -86,7 +86,7 @@ public class constantVelSpin {
     m_encoder = m_motor.getEncoder();
     ElisLemons.initTheLemon();
     // PID coefficients
-    kP = 6e-5; // 6e-5;
+    kP = 0; // 6e-5;
     kI = 0;
     kD = 0;
     kIz = 0;
