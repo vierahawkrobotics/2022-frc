@@ -173,8 +173,8 @@ public class Lemonlight {
         return distance+24;
     }
 
-    public double aimingRit(){
-        double offset = Lemonlight.getHorizontalOffset();
+    public double aimingRit(double tx){
+        double offset = tx;
         double steeringAdjust = 0;
         double kp = -.1;
         double min_command = .05;
