@@ -189,6 +189,13 @@ public class Lemonlight {
 
         m_drive.gotoAngle(steeringAdjust);;
     }
+
+    //pass distance in meters
+    public void getInRange(double range){
+        double distance = distanceGrab()/(12*3.28);
+        double change = distance - range;
+        m_drive.goDistance(change);
+    }
     
     // public double doubleDistance(){
     //     return 2*distanceGrab();
