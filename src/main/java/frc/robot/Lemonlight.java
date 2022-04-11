@@ -26,7 +26,7 @@ public class Lemonlight {
     DriveTrain m_drive;
     Climb climb;
 
-    private final Shooter shoot = new Shooter(m_drive, climb);
+   // private final Shooter shoot = new Shooter(m_drive, climb);
      /**
      * read values periodically
      */
