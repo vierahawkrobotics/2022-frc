@@ -163,11 +163,11 @@ public class constantVelSpin {
       }
 
       // double setPoint = VtoRPM();
-      double setPoint = VtoRPM() / 5000;
+      double setPoint = (VtoRPM() * .8) / 5000;
       if (invert) {
         setPoint = -setPoint;
       }
-      m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVelocity);
+      m_pidController.setReference(setPoint, CANSparkMax.ControlType.kVoltage);
       // this is just to make stuff spin
       m_motor.set(setPoint);
 
