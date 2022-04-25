@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   private final Joystick m_controller = new Joystick(0);
   private final DriveTrain m_drive = new DriveTrain();
   public Climb climb = new Climb(9,10);
-  private final Shooter shoot = new Shooter( m_drive, climb);  
+  private final Shooter shoot = new Shooter(m_drive, climb);  
 
   private Autonomous autonomous = new Autonomous();
 
