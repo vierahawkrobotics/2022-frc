@@ -36,13 +36,17 @@ public class Lemonlight {
     
     }
 
+
+    public Lemonlight() {
+        m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
+    }
     /**
     * initialization function, need to call this in 
     * order to use Lemonlight functions
     */
-   public void initTheLemon() {
-        m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
-   }
+//    public void initTheLemon() {
+//         m_table = NetworkTableInstance.getDefault().getTable(m_tableName);
+//    }
 
      /**
      * @return vertical offset to object from limeLight

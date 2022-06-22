@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -45,6 +47,9 @@ public class DriveTrain {
   private final MotorControllerGroup m_rightGroup =
       new MotorControllerGroup(m_rightLeader, m_rightFollower);
 
+  private final Field2d mfield = new Field2d();
+  
+
   // private final AnalogGyro m_gyro = new AnalogGyro(0);
   private final AHRS ahrs = new AHRS(SPI.Port.kMXP);
 
@@ -54,7 +59,7 @@ public class DriveTrain {
   private final DifferentialDriveKinematics m_kinematics =
       new DifferentialDriveKinematics(kTrackWidth);
 
-  // private final DifferentialDriveOdometry m_odometry;
+  private final DifferentialDriveOdometry m_odometry;
 
   // Gains are for example purposes only - must be determined for your own robot!
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
@@ -88,12 +93,15 @@ public class DriveTrain {
     // distance traveled for one rotation of the wheel divided by the encoder
     // resolution.
 
-    // m_odometry = new DifferentialDriveOdometry(ahrs.getRotation2d());
+    m_odometry = new DifferentialDriveOdometry(ahrs.getRotation2d());
     this.start =  System.currentTimeMillis();
     m_leftLeader.setNeutralMode(DrivetrainConstants.driveMode);
     m_leftFollower.setNeutralMode(DrivetrainConstants.driveMode);
     m_rightLeader.setNeutralMode(DrivetrainConstants.driveMode);
     m_rightFollower.setNeutralMode(DrivetrainConstants.driveMode);
+
+    SmartDashboard.putData("Field", mfield);
+    mfield.setRobotPose(m_odometry.getPoseMeters());
   }
 
   /**

@@ -84,7 +84,7 @@ public class constantVelSpin {
 
     // Encoder object created to display position values
     m_encoder = m_motor.getEncoder();
-    ElisLemons.initTheLemon();
+    //ElisLemons.initTheLemon();
     // PID coefficients
     kP = 0; // 6e-5;
     kI = 0;
