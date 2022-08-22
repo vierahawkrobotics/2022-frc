@@ -52,10 +52,14 @@ public class Climb {
         right.stopMotor();
     }
 
-    public void Teleop(boolean up, boolean down, boolean smallDown) {
+    public void Teleop(boolean up, boolean down, boolean smallDown, boolean angleUp, boolean angleDown, boolean extensionUp, boolean extensionDown) {
         if(up) InterpMode(ClimberMode.Up);
         else if(down) InterpMode(ClimberMode.Down);
         else if(smallDown) InterpMode(ClimberMode.SmallDown);
+        else if (angleUp) InterpMode(ClimberMode.angleUp);
+        else if (angleDown) InterpMode(ClimberMode.angleDown);
+        else if (extensionUp) InterpMode(ClimberMode.extensionUp);
+        else if (extensionDown) InterpMode(ClimberMode.extensionDown);
         else InterpMode(ClimberMode.doNothing);
     }
 
