@@ -25,7 +25,7 @@ public class Robot extends TimedRobot {
 
   private final Joystick m_controller = new Joystick(0);
   private final DriveTrain m_drive = new DriveTrain();
-  public Climb climb = new Climb(9,10);
+  public Climb climb = new Climb(9,10,);
   private final Shooter shoot = new Shooter( m_drive, climb);  
 
   private Autonomous autonomous = new Autonomous();
@@ -110,7 +110,7 @@ public class Robot extends TimedRobot {
     }
     shoot.shooterTeleop(m_controller.getRawButton(1), m_controller.getRawButton(2), m_xbox.getRawButton(3), m_xbox.getRawButton(2), m_xbox.getRawButton(5));
     //shoot.shootAutomation(m_controller.getRawButton(1), m_xbox.getRawButton(4), m_xbox.getRawButton(3));
-    climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6));
+    climb.Teleop(m_xbox.getRawButton(4), m_xbox.getRawButton(1), m_xbox.getRawButton(6), m_controller.getRawButton(9), m_controller.getRawButton(10), m_controller.getRawButton(11), m_controller.getRawButton(12));
 
     shoot.Idle(m_xbox.getRawButton(5), m_controller.getRawButton(1),  false, m_xbox.getRawButton(3),m_xbox.getRawButton(2));
   }
